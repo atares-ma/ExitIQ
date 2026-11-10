@@ -1,0 +1,1680 @@
+Prepared for the atares development team | 4 November 2026 | Version 1.0
+
+1 Product decision
+
+Build ExitIQ as a guided discovery journey followed by an adaptive
+technical assessment. Give users useful observations before requesting
+extensive preparation data, then help them turn unanswered questions
+into a practical work plan. Preserve tactical depth across finance, tax,
+legal matters, governance and process execution.
+
+The product must support owner or family businesses, corporate
+subsidiaries, PE-backed businesses and VC-backed businesses, including
+combinations. Separate ownership, management, transaction objective and
+the sale perimeter. Use one explicit scoring profile and independently
+activated modules.
+
+Launch recommendation: show three readiness dimensions: Strategic
+clarity, Operational transferability and Transaction preparation. Show
+answer coverage and evidence support alongside each. Keep critical risks
+outside the numeric score. Do not display an overall exit score,
+valuation, sale probability or implied multiple uplift.
+
+Model status: all weights, answer anchors, coverage thresholds and
+priority rules in this document are proposed product parameters for
+version 1. They are expert design assumptions to calibrate with atares
+transaction professionals and users. They are not empirically validated
+buyer benchmarks.
+
+Scope and deliverables
+
+-   A staged user journey, English example copy, profiling fields and
+    deterministic routing rules.
+
+-   Eight discovery screens and a catalogue of 55 scored controls, with
+    answer points, local weights, applicability and suggested
+    contributors.
+
+-   Context-specific domain weights, treatment of unknown answers,
+    evidence and contradictions, plus worked calculations.
+
+-   Risk escalation, tax scope, report generation, permissions,
+    analytics, acceptance tests and release priorities.
+
+Document map
+
+Sections 2–5 cover experience and routing. Sections 6–8 specify scoring
+and risk rules. Section 9 defines the discovery journey. Sections 10–17
+contain the question catalogue. Sections 18–22 cover implementation,
+outputs, testing, calibration and sources.
+
+This is a new implementation recommendation. Findings from the 2
+November product test explain the priorities, including inconsistent
+question counts, weak progress visibility and an incomplete generated
+report; current production behaviour has not been re-tested for this
+specification.
+
+2 Journey and interaction design
+
+  -------------------------------------------------------------------------
+  Stage        Implementation                         User outcome
+  ------------ -------------------------------------- ---------------------
+  Context      Capture role, ownership, objective and Relevant questions
+               scope progressively. Explain why each  
+               field is needed.                       
+
+  Discovery    Eight screens mixing orientation,      New perspective
+               factual diagnostics and reused scored  
+               controls.                              
+
+  Initial      Show up to three supported             Reason to continue
+  picture      observations and incomplete areas. No  
+               full readiness score.                  
+
+  Deep         Present applicable controls by theme.  Technical preparation
+  assessment   Reuse earlier answers and allow        
+               delegation and resumption.             
+
+  Action plan  Show the three dimensions, open risks, Practical next steps
+               evidence gaps and tasks.               
+  -------------------------------------------------------------------------
+
+Suggested entry copy
+
+See your business through a buyer’s eyes.
+Explore what makes your business attractive, what may be difficult to
+transfer and what needs preparation. Start with a few questions, then
+choose whether to explore the details.
+Button: Start my first assessment
+
+Only promise a completion time after observing real users on the
+relevant route. Display the computed number of applicable controls;
+update it transparently when a new answer activates a module. Explain
+that additional questions have been added and why.
+
+Interaction rules
+
+-   Use one assessed fact per question. Put explanatory terminology
+    below the question or behind a clearly labelled help control.
+
+-   Show neutral progress, for example “Finance: 3 of 6 questions”.
+    Avoid “Step 4 of 4” for a long final question block.
+
+-   Use explicit options for Unknown, Needs internal confirmation, Needs
+    adviser review and Prefer not to answer. These are unresolved
+    statuses, not numeric failures.
+
+-   Save progress on every answer. Permit backward navigation and show
+    changes to applicability before hiding previous answers.
+
+-   Give one short observation after a theme, not praise or warnings
+    after every answer. Base it on recorded responses.
+
+-   Offer “Continue preparation” and “Save and return” at the discovery
+    boundary. Contact, report delivery and newsletters remain separate
+    optional actions.
+
+Technical presentation
+
+Keep the main question, short answer options and navigation visible on
+common mobile screens where possible. Use radio buttons for single
+choice and checkboxes only for genuine multiple choice. Give controls
+visible keyboard focus and sufficient contrast. Test on real mobile
+devices; the previous review covered a desktop browser only.
+
+3 Context fields and profile selection
+
+All fields below are unscored routing metadata. Collect the minimum
+before discovery; collect specialist triggers at the relevant theme.
+Preserve UNKNOWN as a value. Do not infer seller tax residence from the
+operating company’s address.
+
+  ------------------------------------------------------------------------------
+  Field                 Values or purpose
+  --------------------- --------------------------------------------------------
+  respondent_role       Owner; management; CFO/finance; corporate M&A; investor;
+                        adviser; other. Does not confer authority or access.
+
+  ownership_tags        Multiple: private/family; corporate group; PE; VC;
+                        other; unknown.
+
+  management_model      Owner-led; employed management; mixed; unknown.
+
+  primary_context       One: OWNER, CORPORATE, PE or VC. Explicitly confirmed by
+                        the user.
+
+  objective             Multiple: full sale; partial sale; succession; primary
+                        growth capital; exploration; distress; IPO.
+
+  perimeter             Whole standalone business; subsidiary; business
+                        unit/assets; minority interest; undecided.
+
+  horizon               Under 6 months; 6–18; 19–36; over 36; undecided.
+                        Context, not points.
+
+  company_profile       Business model, sector, revenue band, employee band,
+                        company jurisdiction.
+
+  specialist_triggers   Group dependencies; debt; acquisitions; employee equity;
+                        preferences; convertibles; regulation; restructuring;
+                        rollover/earn-out; cross-border exposure.
+
+  seller_map            At least seller legal form/type and tax jurisdiction
+                        status. Exact identities can be deferred to restricted
+                        technical work.
+  ------------------------------------------------------------------------------
+
+Early liquidity screen
+
+Before the discovery sequence, ask an unscored question: Are there known
+or expected difficulties meeting payment obligations during the next six
+months? Options: No known pressure; Potential pressure requiring review;
+Confirmed acute pressure; Unknown. Potential or unknown pressure creates
+a review task. Confirmed acute pressure activates the specialist
+pathway; the tool does not itself diagnose insolvency. Obtain a
+qualified assessment for that conclusion.
+
+Choosing the primary profile
+
+Ask: “Which perspective best describes the transaction you are
+preparing?” Explain the four choices. Suggest CORPORATE for a subsidiary
+disposal by an operating group, PE for a sponsor-led exit, VC for a
+venture-backed liquidity event, and OWNER for a private or family-led
+exit. The user confirms the choice. A personal holding company alone
+does not make a business CORPORATE.
+
+For mixed ownership, retain all tags and ask which perspective should
+drive the weighting. If undecided, allow discovery and show that scoring
+is pending profile confirmation. Do not silently choose a profile.
+Recalculate visibly if it changes, retaining the previous version for
+comparison.
+
+Example: a founder-led PE portfolio business may use the PE weighting
+profile while retaining founder-dependency questions. A PE-owned
+carve-out activates separation controls even though CORPORATE is not the
+primary profile.
+
+4 Routing rules and decision branches
+
+Evaluate routes deterministically after each relevant answer. CORE
+applies to every supported full assessment. Module membership controls
+applicability; it does not add a second score for the same underlying
+control.
+
+  -------------------------------------------------------------------------
+  Route code        Activation rule                         Additional
+                                                            controls
+  ----------------- --------------------------------------- ---------------
+  CORE              All standard business sale, succession, Q01–Q17;
+                    minority or growth-capital assessments. Q19–Q23;
+                                                            Q25–Q30;
+                                                            Q32–Q36;
+                                                            Q40–Q43
+
+  DEBT              External or shareholder debt, security  Q24
+                    or guarantees exist.                    
+
+  CONTINGENT        Rollover, earn-out, deferred            Q31
+                    consideration or similar arrangements   
+                    are being considered.                   
+
+  REGULATED         Material business licences, permits or  Q37
+                    regulatory approvals apply.             
+
+  INVESTOR_RIGHTS   PE or VC tag, or special investor       Q38
+                    rights/preferences exist.               
+
+  EMPLOYEE_EQUITY   Options, shares, virtual equity, MIP or Q39
+                    comparable plans exist.                 
+
+  SEPARATION        Business-unit/assets disposal OR        Q44–Q49
+                    material dependence on a remaining      
+                    group.                                  
+
+  PE_CONTEXT        PE tag present, independent of chosen   Q50
+                    primary profile.                        
+
+  CONVERTIBLE       Convertible or other converting         Q51
+                    instruments exist.                      
+
+  CROSS_BORDER      Relevant company/seller tax             Q52
+                    jurisdictions differ or multiple        
+                    jurisdictions are involved.             
+
+  ASSET_TRANSFER    Business assets or a business unit are  Q53
+                    in the proposed perimeter.              
+
+  PARTIAL           Partial sale or minority stake; also    Q54
+                    primary equity issuance if rights will  
+                    change.                                 
+
+  PRIMARY_CAPITAL   New equity is to be issued to fund the  Q55
+                    company.                                
+  -------------------------------------------------------------------------
+
+Unknown triggers and route precedence
+
+A trigger answered UNKNOWN opens a short clarification and leaves the
+associated module pending. Keep its controls in the applicable
+denominator until applicability is resolved. Record “applicability
+unresolved”; do not auto-hide it or silently treat it as N/A. Pending
+branches prevent a final “complete” assessment.
+
+If “exploration” is selected, assess preparation of alternatives rather
+than demanding an approved sale decision. IPO and distress activate an
+early specialist pathway: preserve progress, show relevant preparatory
+observations, and withhold a standard full-readiness conclusion until an
+appropriate route is supported. A confirmed acute liquidity threat takes
+priority over the usual discovery order. Ordinary losses alone do not
+establish distress.
+
+The route count is computed, not hard-coded. CORE has 37 controls;
+special routes add up to 18. Discovery reuses four controls. This is a
+technical assessment that can be completed across sessions. User testing
+should identify removable duplication before any short-duration promise
+is made.
+
+5 Ownership variants and context examples
+
+  ------------------------------------------------------------------------
+  Context     Specific emphasis                       Avoid
+  ----------- --------------------------------------- --------------------
+  OWNER       Delegated authority, relationship       Treating personal
+              continuity, succession aims, seller     involvement as an
+              proceeds preparation and desired future automatic deal
+              role.                                   blocker.
+
+  CORPORATE   Perimeter, standalone accounts, group   Assuming a separate
+              services, systems, staff/IP allocation, legal entity is
+              tax separation and transitional         already
+              arrangements.                           operationally
+                                                      independent.
+
+  PE          Demonstrated value creation,            Scoring investor
+              debt/guarantee releases, acquisition    ownership or a short
+              integration, investor approvals and     fund timeline as
+              management incentives.                  evidence of
+                                                      readiness.
+
+  VC          Fully diluted ownership, investor       Penalising
+              rights, liquidation economics,          deliberate growth
+              convertibles, funding runway and        investment simply
+              credible growth economics.              because EBITDA is
+                                                      negative.
+  ------------------------------------------------------------------------
+
+Shared questions with context specific wording
+
+Q12 measures continuity of decision authority in every business. For
+owner-led management use “You are unavailable for four weeks. Which
+decisions wait?” For employed management use “A key executive is
+unavailable for four weeks. Which decisions wait?” Keep the same answer
+anchors and score semantics.
+
+Q07 measures understanding of repeatable business economics. For
+established profitable businesses ask about normalised earnings and cash
+conversion. For deliberately loss-making growth businesses ask about
+reconciled cohort/unit economics and the documented path to sustainable
+economics. Do not award points merely for profitability or a stated
+growth plan.
+
+Q32 covers legal ownership. Its venture wording explicitly refers to the
+fully diluted cap table. Q38 assesses distribution rights; Q51 assesses
+converting instruments. These are distinct controls and must not
+duplicate a generic “cap table quality” score.
+
+Illustrative route combinations
+
+-   Family-owned IT services, full share sale, no debt: OWNER + CORE.
+    Add founder wording, rather than adding a second founder score.
+
+-   Industrial group disposing of a dependent subsidiary: CORPORATE +
+    CORE + SEPARATION, with ASSET_TRANSFER only if assets/business
+    transfer is actually proposed.
+
+-   Founder-led PE buy-and-build exit with leverage and MIP: PE + CORE +
+    DEBT + PE_CONTEXT + EMPLOYEE_EQUITY + INVESTOR_RIGHTS; acquisition
+    history activates Q18.
+
+-   VC-backed SaaS partial exit with new capital, options and
+    convertible notes: VC + CORE + INVESTOR_RIGHTS + EMPLOYEE_EQUITY +
+    CONVERTIBLE + PARTIAL + PRIMARY_CAPITAL. Add CROSS_BORDER only when
+    supported by facts.
+
+Before scoring, show a readable configuration summary: selected
+perspective, proposed transaction, active modules and unresolved routing
+questions. Let the user correct it.
+
+6 Proposed domain weights
+
+Each dimension is scored independently on a 0–100 readiness scale. Every
+profile column sums to 100 within each dimension. These percentages
+allocate importance to domains, not to individual answer choices. Local
+question weights distribute a domain’s allocation among its applicable
+controls.
+
+  --------------------------------------------------------------------------
+  Dimension and domain                   OWNER    CORP     PE       VC
+  -------------------------------------- -------- -------- -------- --------
+  Strategic clarity S1 Objectives and    35       30       30       25
+  scope                                                             
+
+  Strategic clarity S2 Alignment and     35       35       30       40
+  authority                                                         
+
+  Strategic clarity S3 Options and       30       35       40       35
+  future plan                                                       
+
+  Operational O1 Business economics and  25       25       30       20
+  liquidity                                                         
+
+  Operational O2 Revenue and supply      20       15       20       20
+  resilience                                                        
+
+  Operational O3 People and relationship 25       25       20       20
+  continuity                                                        
+
+  Operational O4 Systems and execution   15       25       15       20
+  capacity                                                          
+
+  Operational O5 Competitive proposition 15       10       15       20
+
+  Transaction T1 Financial preparation   25       20       25       20
+
+  Transaction T2 Tax preparation         25       25       20       20
+
+  Transaction T3 Legal title and rights  25       25       25       35
+
+  Transaction T4 Process execution       25       30       30       25
+  --------------------------------------------------------------------------
+
+Rationale
+
+OWNER emphasises ownership alignment and continuity beyond the owner.
+CORPORATE allocates more operational weight to systems and execution
+capacity and more transaction weight to process readiness. PE gives more
+strategic weight to options and the demonstrated future plan and more
+operational weight to business economics. VC emphasises stakeholder
+alignment and legal/economic rights while avoiding an EBITDA-only view.
+
+Local weights and overlays
+
+Within a domain, local weight 3 denotes a central control, 2 a
+supporting control and 1 an enabling control. The catalogue specifies
+each value. There are no hidden multipliers. Conditional controls join
+their stated domain and share its existing weight; they do not increase
+the dimension total above 100.
+
+A triggered tax module does not reduce tax importance elsewhere: the
+universal tax controls always apply. Corporate separation adds a
+specific tax separation control Q49. Multiple ownership tags activate
+relevant questions but never average or multiply the four profile
+matrices.
+
+Do not reweight on the basis of a bad answer, respondent role or
+sales-lead attractiveness. Horizon changes task urgency, not readiness
+arithmetic. Store profile, question catalogue and scoring version with
+every result.
+
+7 Scoring coverage and evidence
+
+Deterministic calculation
+
+For a dimension, let p_d be its domain percentage. Let A_d contain all
+applicable controls, including unresolved answers and pending
+applicability. Let u_q be each control’s local weight. Assign effective
+weight e_q = p_d × u_q / sum(u_j for j in A_d). Effective weights
+therefore sum to 100 for a fully applicable dimension.
+
+A substantive answer a_q is exactly 0, 50 or 100, using the
+question-specific anchors. Let K be the controls with substantive,
+non-conflicted answers. Answer coverage C = sum(e_q for q in K) / 100.
+The answered-only index R = sum(e_q × a_q for q in K) / sum(e_q for q in
+K). If K is empty, R is null, never zero.
+
+Also calculate the missing-answer range: L = sum(e_q × a_q for q in K) /
+100; U = L + sum(e_q for applicable controls outside K). L and U are
+points on the 0–100 scale. They are mathematical missing-answer bounds,
+not a statistical confidence interval.
+
+Display and completeness rules
+
+-   Discovery: observations only. Never publish a complete dimension
+    score from the discovery sample.
+
+-   Full assessment: show a rounded dimension index only if weighted
+    dimension coverage is at least 80% and each domain has at least 50%
+    local-weight coverage. Otherwise show “Insufficient coverage” and
+    the completion required.
+
+-   At 80–99% coverage label the index “Indicative, incomplete”; display
+    C and the missing-answer range. A complete assessment requires 100%
+    substantive coverage of applicable controls, no pending
+    applicability or conflicting answers, and a confirmed profile.
+
+-   A complete questionnaire can still contain low scores or confirmed
+    issues. “Complete” describes the data, not approval to transact.
+    Outstanding critical risks produce a separate status even when every
+    answer is known.
+
+Worked example
+
+In one domain, three controls have local weights 3, 2 and 1. Answers are
+100, 50 and UNKNOWN. Answered-only domain index = (3×100 + 2×50)/5 = 80.
+Coverage = 5/6 = 83.3%. Missing-answer range = 66.7–83.3. Answering
+UNKNOWN cannot produce a complete high-readiness result. If the third
+control is confirmed absent, it scores 0 and the domain result becomes
+66.7 at 100% coverage.
+
+Evidence support
+
+Keep evidence separate from answer points. Set evidence factor v_q to 0
+for self-report only, 0.5 for a dated evidence reference with named
+responsible role, and 1 only after an authorised reviewer has actually
+reviewed the support. An upload or filename alone never earns 1.
+Evidence support = sum(e_q × v_q)/100 across applicable controls;
+unknown answers have v_q = 0. Label this metric “Evidence support”, not
+confidence or verification of the entire business.
+
+8 Risks exceptions and priorities
+
+Preserve raw dimension indices. Do not reproduce an arbitrary 33%
+ceiling. Risk status is displayed separately so a strong average cannot
+hide a time-critical issue.
+
+  ---------------------------------------------------------------------------
+  Rule            Trigger                         Required outcome
+  --------------- ------------------------------- ---------------------------
+  R01 Liquidity   User confirms inability to meet Specialist route; no
+                  imminent obligations or active  standard transaction-ready
+                  insolvency/covenant crisis.     conclusion.
+
+  R02 Authority   Q04=0 AND a launch/commitment   Critical prerequisite; name
+                  is planned before the required  approval and owner.
+                  authority can be obtained.      
+
+  R03 Essential   User confirms disputed/missing  Critical legal review; do
+  rights          rights to essential IP,         not infer from UNKNOWN
+                  ownership or permission needed  alone.
+                  for the transaction.            
+
+  R04 Tax timing  Specialist-confirmed unresolved Critical tax review.
+                  tax restriction/deadline        Restructuring history alone
+                  affecting the proposed          creates a review task.
+                  timetable.                      
+
+  R05 Separation  SEPARATION active and essential Critical separation
+                  service is confirmed to lack a  prerequisite.
+                  viable continuity plan at       
+                  proposed completion.            
+
+  R06 Funding     A confirmed funding gap         Critical liquidity/funding
+                  precedes the intended           task; assess specialist
+                  transaction timetable with no   route.
+                  credible funded bridge.         
+
+  R07             Material answers or             Reconfirmation required;
+  Contradiction   contributors conflict.          affected answers excluded
+                                                  from known coverage until
+                                                  resolved.
+  ---------------------------------------------------------------------------
+
+Resolution and review
+
+Low numeric anchors create preparation tasks. A critical flag
+additionally requires the stated factual predicate or authorised
+specialist judgement. UNKNOWN creates “Needs review”, not a confirmed
+legal, tax or solvency defect. Critical flags are not automatically
+cleared by high scores elsewhere. Record resolution evidence, reviewer,
+date and reason.
+
+Examples of contradictions: “all material decisions delegated” versus
+“all approvals require the founder”; “no convertibles” versus an
+outstanding note disclosed later; a fully standalone assertion versus
+essential unplanned parent services. Reconfirm the facts instead of
+selecting the more optimistic answer.
+
+Priority engine
+
+Sort confirmed critical prerequisites first, unresolved critical facts
+second, and ordinary preparation gaps third. Within each class rank by
+planned deadline, then impact. For a known numeric gap use impact = e_q
+× (100−a_q)/100. Show dimension and domain because effective weights
+belong to different dimensions and must not be presented as one
+aggregate score. Use effort only as an additional planning field, not a
+reason to hide a high-impact issue.
+
+Tasks carry source question IDs, reason, suggested responsible role,
+suggested timing relative to the transaction, dependency, evidence
+required and status. Dates proposed by the tool are planning
+suggestions, not statements of legal deadlines. Only a maintained
+jurisdiction rule or adviser confirmation may supply an actual legal
+deadline.
+
+9 Discovery sequence and feedback
+
+Discovery introduces themes while gathering reusable information.
+Orientation and factual diagnostics carry no readiness points. Reuse
+scored controls in the deep assessment without asking them again.
+Rewording for context must preserve the meaning of the underlying
+control.
+
+  -------------------------------------------------------------------------
+  Screen   English question                           Treatment
+  -------- ------------------------------------------ ---------------------
+  E01      Which strength of your business would you  Multi-select
+           show a potential buyer first?              strengths; unscored
+                                                      preference.
+
+  E02      Why do customers choose you when a         Use Q19 anchors; same
+           competitor offers a lower price?           stored control.
+
+  E03      How much of your next 12 months of revenue Optional numeric/band
+           is already contractually committed?        diagnostic; unscored.
+
+  E04      If your largest customer left, what share  Optional numeric/band
+           of annual revenue would be affected?       diagnostic; unscored.
+
+  E05      You are unavailable for four weeks. Which  Use Q12;
+           decisions wait?                            employed-management
+                                                      variant as in section
+                                                      5.
+
+  E06      A key expert is absent for an extended     Use Q13.
+           period. Who can cover the critical work?   
+
+  E07      If demand grew by 30%, what would reach    Select constraint;
+           its limit first?                           unscored routing to
+                                                      Q16 and related
+                                                      controls.
+
+  E08      Has a transaction-experienced tax adviser  Use Q25.
+           been engaged to review a possible          
+           transaction?                               
+  -------------------------------------------------------------------------
+
+Initial picture
+
+Show at most three observations linked to actual answers. Example: “You
+identified personal customer relationships as a strength. Your
+continuity answers suggest checking how these relationships can be
+maintained after a change of ownership.” Where answers do not support an
+observation, say that further detail is needed.
+
+Do not infer automatic fragility from low committed revenue in a project
+business, or declare a customer concentration unacceptable from one
+percentage. Those facts direct Q09 and Q10. Do not estimate valuation,
+tax savings or a multiple effect.
+
+Transition into technical depth
+
+Suggested copy: “Your first answers highlight the areas worth exploring.
+Continue to review the supporting figures, ownership arrangements, tax
+preparation and practical steps. You can pause or ask a colleague to
+help.”
+
+Use six visible chapters: What makes the business valuable; How
+dependable the business is; What transfers to a new owner; What supports
+the next stage; What can be demonstrated; What the transaction should
+achieve. The scoring domains remain separate from this editorial order.
+
+10 Strategic question catalogue
+
+Every catalogue control also offers unresolved statuses and a
+conditional N/A request under section 18. Local weights are relative
+within the stated domain. Anchors below are scored 0, 50 and 100; they
+are mutually exclusive substantive states, not promises about an
+eventual exit.
+
+Q01 Transaction objectives
+
+What should this transaction achieve for the relevant sellers or capital
+providers?
+
+0: Objectives have not been articulated. 50: Objectives are described
+but priorities remain unresolved. 100: Prioritised objectives are
+documented.
+
+Domain S1 | Local weight 2 | Route CORE | Suggested contributor Lead
+shareholder / sponsor
+
+Q02 Timing and preparation
+
+How clearly is the intended timetable linked to the preparation work
+still required?
+
+0: No timetable or preparation sequence exists. 50: A timetable exists
+without a complete dependency review. 100: A timetable and preparation
+dependencies are documented.
+
+Domain S1 | Local weight 1 | Route CORE | Suggested contributor
+Transaction lead
+
+Q03 Stakeholder alignment
+
+How far have the relevant decision makers agreed on the intended
+transaction objectives?
+
+0: Material disagreement is unresolved. 50: Views have been collected;
+some differences remain open. 100: Objectives are agreed through the
+relevant governance process.
+
+Domain S2 | Local weight 3 | Route CORE | Suggested contributor Lead
+shareholder / board
+
+Q04 Decision authority
+
+Are the approvals required to launch and complete the proposed
+transaction mapped?
+
+0: Required approvals are not mapped. 50: Approval bodies are
+identified; process or timing is incomplete. 100: Required bodies,
+authority and decision timetable are documented.
+
+Domain S2 | Local weight 2 | Route CORE | Suggested contributor Legal /
+board secretariat
+
+Q05 Feasible transaction options
+
+Have the realistic transaction options been compared against the stated
+objectives?
+
+0: No comparison has been made. 50: Options are listed without a
+complete comparison. 100: Feasible options and their trade-offs are
+documented.
+
+Domain S3 | Local weight 2 | Route CORE | Suggested contributor
+Transaction lead / adviser
+
+Q06 Future management role
+
+Has the intended post-transaction role of the current leadership been
+defined?
+
+0: Expectations are unresolved. 50: An intended role exists; feasibility
+or succession remains open. 100: Roles and continuity requirements are
+documented and aligned.
+
+Domain S3 | Local weight 2 | Route CORE | Suggested contributor
+Management / owners
+
+Context note
+
+Exploration can score 100 for Q01 or Q05 when the exploration objective
+and comparison are explicit. A user is not penalised for choosing not to
+launch a sale. A corporate user addresses seller objectives and
+management continuity, rather than an owner’s personal retirement plans.
+
+11 Business resilience and people questions
+
+Q07 Repeatable business economics
+
+Can you explain the economics that would continue under normal operating
+conditions?
+
+0: The underlying economics are not understood. 50: Key drivers are
+identified but the analysis is incomplete. 100: Repeatable earnings or
+growth-model unit economics are reconciled and explained.
+
+Domain O1 | Local weight 3 | Route CORE | Suggested contributor CFO
+
+Q08 Liquidity planning
+
+Does your cash planning identify funding needs through the intended
+transaction period?
+
+0: No usable cash forecast exists. 50: A forecast exists but funding
+scenarios are incomplete. 100: A maintained scenario forecast identifies
+needs and funded responses.
+
+Domain O1 | Local weight 2 | Route CORE | Suggested contributor CFO
+
+Q09 Customer exposure response
+
+How prepared are you for the loss of a material customer?
+
+0: Exposure and response are unassessed. 50: Exposure is quantified; the
+response is incomplete. 100: Exposure and a proportionate response are
+documented.
+
+Domain O2 | Local weight 3 | Route CORE | Suggested contributor
+Commercial lead / CFO
+
+Q10 Revenue durability
+
+Can you demonstrate how existing customer revenue is retained or
+renewed?
+
+0: Retention or repeat purchasing is not monitored. 50: Some retention
+or repeat-order data exists. 100: A reconciled history and relevant
+contract terms explain durability.
+
+Domain O2 | Local weight 2 | Route CORE | Suggested contributor
+Commercial lead
+
+Q11 Critical supply continuity
+
+What would maintain delivery if a critical supplier stopped supplying?
+
+0: Critical dependencies have no continuity response. 50: Alternatives
+or responses are identified but incomplete. 100: Dependencies and
+proportionate continuity arrangements are documented.
+
+Domain O2 | Local weight 1 | Route CORE | Suggested contributor
+Operations
+
+Q12 Decision continuity
+
+Which decisions would wait during a four-week absence of a key decision
+maker?
+
+0: Many routine decisions would wait. 50: Some material decisions would
+wait. 100: Material decisions continue within documented delegated
+authority.
+
+Domain O3 | Local weight 3 | Route CORE | Suggested contributor CEO
+
+Q13 Critical expertise cover
+
+Who could cover essential work if a key expert were absent for an
+extended period?
+
+0: Critical work has no cover. 50: Cover is identified but not
+sufficiently prepared. 100: Capable cover and essential knowledge
+transfer are in place.
+
+Domain O3 | Local weight 2 | Route CORE | Suggested contributor
+Operations / people lead
+
+Q14 Customer relationship continuity
+
+How well are important customer relationships maintained beyond one
+individual?
+
+0: Material relationships depend on one person without cover. 50:
+Additional contacts exist but ownership is incomplete. 100: Account
+ownership and relationship continuity are established.
+
+Domain O3 | Local weight 2 | Route CORE | Suggested contributor
+Commercial lead
+
+12 Execution capacity and market questions
+
+Q15 Repeatable core processes
+
+Can someone new follow the documented steps for your essential operating
+processes?
+
+0: Essential processes rely on undocumented personal knowledge. 50: Some
+essential processes are documented. 100: Essential processes have usable
+documentation and clear owners.
+
+Domain O4 | Local weight 2 | Route CORE | Suggested contributor
+Operations
+
+Q16 Capacity for growth
+
+Have you assessed what would constrain a material increase in demand?
+
+0: Constraints have not been assessed. 50: Main constraints are known
+without a complete response. 100: Capacity constraints and a resourced
+response are documented.
+
+Domain O4 | Local weight 2 | Route CORE | Suggested contributor
+Operations / CFO
+
+Q17 Technology continuity
+
+How prepared are your essential systems for a prolonged outage?
+
+0: No usable recovery arrangements exist. 50: Recovery arrangements
+exist but have material untested gaps. 100: Recovery arrangements are
+documented and appropriately tested.
+
+Domain O4 | Local weight 2 | Route CORE | Suggested contributor IT /
+security
+
+Q18 Acquisition integration
+
+Are material dependencies from previous acquisitions under control?
+
+0: Material integration dependencies lack an owned plan. 50: A plan
+exists with unresolved ownership or milestones. 100: Dependencies have
+owners, milestones and monitored progress.
+
+Domain O4 | Local weight 2 | Route ACQUISITIONS | Suggested contributor
+Integration lead
+
+Q19 Defensible differentiation
+
+What evidence supports the reason customers choose your business?
+
+0: The proposition is asserted without supporting evidence. 50: Some
+evidence supports the proposition. 100: Relevant customer, product or
+market evidence supports the proposition.
+
+Domain O5 | Local weight 2 | Route CORE | Suggested contributor
+Commercial / product lead
+
+Q20 Credible development roadmap
+
+How prepared is the next material product or service development step?
+
+0: No development priorities have been defined. 50: Priorities exist
+without an executable plan. 100: Priorities, resources, milestones and
+success measures are documented.
+
+Domain O5 | Local weight 2 | Route CORE | Suggested contributor Product
+/ strategy
+
+Branch and diagnostic rules
+
+ACQUISITIONS is active if a material acquisition creates ongoing
+integration obligations; its trigger is collected with company history.
+Add Q18 to O4 and recalculate its local denominator. A corporate
+divestment is not automatically an acquisition for this purpose. Unknown
+acquisition status leaves applicability pending.
+
+For Q16, the 30% discovery scenario is illustrative. The technical
+follow-up uses a relevant demand scenario for the business, not a
+universal growth target. For Q17, a known serious security issue may
+require a specialist task but is not automatically a numerical
+transaction veto.
+
+Q19 measures whether the proposition can be supported. It is not an
+independent judgement that a strong moat exists. Raw market-growth,
+retention, recurring-revenue and concentration statistics may inform
+commentary, but do not change readiness points outside the published
+anchors.
+
+13 Financial and process preparation questions
+
+Q21 Financial information package
+
+Could you provide a consistent historical financial package for the
+proposed perimeter?
+
+0: Key financial records are incomplete or inconsistent. 50: Most
+records exist; material reconciliations remain open. 100: Required
+periods and perimeter are reconciled and ready for review.
+
+Domain T1 | Local weight 3 | Route CORE | Suggested contributor CFO
+
+Q22 Forecast support
+
+Can the financial forecast be traced to explicit operating assumptions?
+
+0: The forecast cannot be traced to operating assumptions. 50: Main
+assumptions are documented with gaps. 100: Operating assumptions and
+financial consequences are traceable.
+
+Domain T1 | Local weight 2 | Route CORE | Suggested contributor CFO
+
+Q23 Enterprise to equity bridge
+
+Are cash, debt and other potential purchase-price adjustments
+identified?
+
+0: Potential adjustments are not mapped. 50: A preliminary mapping
+exists. 100: Adjustments and supporting balances are documented for
+review.
+
+Domain T1 | Local weight 2 | Route CORE | Suggested contributor CFO /
+transaction adviser
+
+Q24 Financing releases
+
+Is the route to required lender consents and security releases
+understood?
+
+0: Required consents or releases are unassessed. 50: Requirements are
+identified without a complete execution plan. 100: Requirements, parties
+and execution timetable are documented.
+
+Domain T1 | Local weight 3 | Route DEBT | Suggested contributor CFO /
+legal
+
+Q40 Data room readiness
+
+Can the team locate and organise the information needed for review?
+
+0: Information is dispersed without an index or owners. 50: An index
+exists; material gaps lack a complete response. 100: A permissioned
+index, owners and gap plan are maintained.
+
+Domain T4 | Local weight 2 | Route CORE | Suggested contributor Project
+manager
+
+Q41 Process team
+
+Who is accountable for the work and decisions needed during the
+transaction?
+
+0: No responsible team is defined. 50: Key roles exist; capacity or
+decision rules remain open. 100: Roles, capacity, decision rules and
+milestones are agreed.
+
+Domain T4 | Local weight 2 | Route CORE | Suggested contributor
+Transaction lead
+
+Q42 Known issue resolution
+
+How are identified preparation issues being resolved?
+
+0: Material known issues have no tracked response. 50: A list exists
+without complete ownership or milestones. 100: An active issue log
+records owners, dependencies and milestones.
+
+Domain T4 | Local weight 2 | Route CORE | Suggested contributor
+Transaction lead
+
+Q43 Controlled disclosure
+
+Is there an agreed plan for disclosing sensitive information during the
+process?
+
+0: No disclosure plan exists. 50: Basic controls exist with material
+gaps. 100: A staged disclosure and access plan is approved.
+
+Domain T4 | Local weight 1 | Route CORE | Suggested contributor Legal /
+transaction lead
+
+14 Tax preparation question catalogue
+
+Measure preparation and specialist review, not the assumed tax
+efficiency of a particular structure. Ask about applicable jurisdictions
+before applying jurisdiction-specific prompts. A general tax adviser’s
+presence alone does not demonstrate completed transaction analysis.
+
+Q25 Tax workstream
+
+Has a transaction-experienced tax adviser been engaged for the proposed
+transaction?
+
+0: No adviser or responsible tax workstream is assigned. 50: An adviser
+is identified but scope is not agreed. 100: A responsible adviser and
+transaction scope are agreed.
+
+Domain T2 | Local weight 1 | Route CORE | Suggested contributor Sellers
+/ tax lead
+
+Q26 Seller tax map
+
+Is the legal and tax profile of the relevant sellers documented?
+
+0: Relevant seller entities or jurisdictions are unmapped. 50: A
+preliminary seller map exists. 100: Relevant legal forms, tax
+jurisdictions and ownership chains are mapped.
+
+Domain T2 | Local weight 3 | Route CORE | Suggested contributor Tax
+adviser
+
+Q27 Transaction alternatives
+
+Have tax consequences of feasible transaction structures been compared?
+
+0: No transaction-specific comparison exists. 50: Initial analysis
+exists with material open assumptions. 100: A dated transaction-specific
+comparison records assumptions and open points.
+
+Domain T2 | Local weight 3 | Route CORE | Suggested contributor Tax
+adviser
+
+Q28 Historical tax restrictions
+
+Have past reorganisations and transfers been reviewed for
+transaction-related restrictions?
+
+0: Relevant history has not been reviewed. 50: History is collected;
+specialist assessment remains incomplete. 100: History and any
+applicable restrictions or deadlines have been reviewed.
+
+Domain T2 | Local weight 3 | Route CORE | Suggested contributor Tax
+adviser
+
+Q29 Tax exposure register
+
+Are material unresolved tax matters identified for the proposed
+perimeter?
+
+0: No reliable register exists. 50: Known matters are listed without
+complete assessment. 100: Material matters, including audit issues, have
+documented treatment and owners.
+
+Domain T2 | Local weight 2 | Route CORE | Suggested contributor Tax
+adviser / CFO
+
+Q30 Tax information availability
+
+Can the relevant tax records be supplied for review?
+
+0: Key records are missing. 50: Most records exist with unresolved gaps.
+100: Required records are indexed with a response for any gaps.
+
+Domain T2 | Local weight 1 | Route CORE | Suggested contributor CFO /
+tax adviser
+
+Q31 Rollover and variable consideration
+
+Have the tax implications of the proposed rollover or variable/deferred
+payments been reviewed?
+
+0: No review exists. 50: A review is underway with material open points.
+100: A transaction-specific review records assumptions, treatment and
+dependencies.
+
+Domain T2 | Local weight 3 | Route CONTINGENT | Suggested contributor
+Sellers’ tax adviser
+
+15 Legal rights and governance questions
+
+Q32 Legal ownership
+
+Can legal ownership of the proposed sale interests be reconciled to the
+ownership records?
+
+0: Ownership records or transfer chain have material unresolved gaps.
+50: Records largely reconcile with open points. 100: Ownership and
+relevant transfer history reconcile.
+
+Domain T3 | Local weight 3 | Route CORE | Suggested contributor Legal
+
+Q33 Essential intellectual property
+
+Can the company demonstrate its rights to the technology or other IP
+essential to its business?
+
+0: Essential rights are undocumented or unresolved. 50: Key rights are
+documented with open assignment or licence issues. 100: Essential rights
+and material licence conditions are documented.
+
+Domain T3 | Local weight 3 | Route CORE | Suggested contributor Legal /
+technology lead
+
+Q34 Material contract change
+
+Have material contract consequences of the proposed transaction been
+assessed?
+
+0: Relevant contract consequences are unreviewed. 50: Key contracts are
+reviewed; material follow-up remains open. 100: Consequences and any
+required consents or responses are documented.
+
+Domain T3 | Local weight 2 | Route CORE | Suggested contributor Legal /
+commercial
+
+Q35 Disputes and claims
+
+Are material actual or threatened disputes assessed for the proposed
+transaction?
+
+0: No reliable assessment exists. 50: Known matters are recorded with
+material gaps. 100: Material matters and proportionate treatment are
+documented.
+
+Domain T3 | Local weight 2 | Route CORE | Suggested contributor Legal
+
+Q36 Data protection preparation
+
+Are material data protection issues identified and assigned a response?
+
+0: Material issues have not been assessed. 50: An assessment exists with
+incomplete responses. 100: Material issues and remediation
+responsibilities are documented.
+
+Domain T3 | Local weight 2 | Route CORE | Suggested contributor Privacy
+/ legal
+
+Q37 Regulatory continuity
+
+Has continuity of essential licences or approvals through the
+transaction been checked?
+
+0: Continuity requirements are unreviewed. 50: Requirements are
+identified; execution remains incomplete. 100: Required approvals and
+continuity steps are documented.
+
+Domain T3 | Local weight 3 | Route REGULATED | Suggested contributor
+Regulatory / legal
+
+Q38 Investor distribution rights
+
+Can the effects of investor preferences and other distribution rights be
+explained across exit scenarios?
+
+0: Distribution rights are not mapped. 50: Rights are mapped; scenario
+outcomes remain incomplete. 100: Documented rights are reconciled to
+scenario outcomes, or absence is confirmed.
+
+Domain T3 | Local weight 3 | Route INVESTOR_RIGHTS | Suggested
+contributor Legal / CFO
+
+Q39 Employee and management equity
+
+Are employee or management participation rights prepared for the
+proposed transaction?
+
+0: Plan rights or transaction consequences are unresolved. 50: Plans are
+mapped with outstanding treatment questions. 100: Rights and transaction
+treatment are documented for the relevant plans.
+
+Domain T3 | Local weight 2 | Route EMPLOYEE_EQUITY | Suggested
+contributor Legal / people / tax
+
+16 Separation module questions
+
+Activate for an asset/business transfer or material dependence on a
+remaining group. The same controls may apply to an owner-led or
+investor-backed business. Do not activate purely because a seller uses a
+personal holding company.
+
+Q44 Sale perimeter
+
+Is the exact business perimeter proposed for transfer documented?
+
+0: Material perimeter boundaries are undefined. 50: A draft perimeter
+exists with open allocations. 100: Entities, assets, people and relevant
+obligations are mapped.
+
+Domain S1 | Local weight 3 | Route SEPARATION | Suggested contributor
+Corporate M&A / legal
+
+Q45 Standalone financials
+
+Can financial performance of the proposed perimeter be shown separately
+from the remaining group?
+
+0: Standalone performance is unavailable. 50: Carve-out figures exist
+with unresolved allocation adjustments. 100: Standalone figures and
+allocation assumptions are reconciled.
+
+Domain T1 | Local weight 3 | Route SEPARATION | Suggested contributor
+CFO / carve-out finance
+
+Q46 Shared service continuity
+
+Is continuity of essential group-provided services planned for
+completion?
+
+0: Essential dependencies lack a viable continuity response. 50:
+Dependencies are mapped; some continuity arrangements remain open. 100:
+Essential service continuity has an owned and executable plan.
+
+Domain O3 | Local weight 3 | Route SEPARATION | Suggested contributor
+Separation lead
+
+Q47 Systems separation
+
+Is separation or continued lawful use of essential group systems
+executable?
+
+0: Essential system separation or access is unplanned. 50: A plan exists
+with material gaps. 100: Rights, resources, sequence and service
+continuity are documented.
+
+Domain O4 | Local weight 3 | Route SEPARATION | Suggested contributor IT
+/ legal
+
+Q48 Transition execution
+
+Are transitional arrangements and their exit plans prepared?
+
+0: Required transitional arrangements are unplanned. 50: Draft
+arrangements exist with material gaps. 100: Required service
+arrangements, accountabilities and exit plans are prepared.
+
+Domain T4 | Local weight 3 | Route SEPARATION | Suggested contributor
+Separation lead / legal
+
+Q49 Tax separation
+
+Have tax consequences of leaving or transferring out of the group been
+reviewed?
+
+0: No transaction-specific separation tax review exists. 50: Initial
+review exists with material unresolved scope. 100: Group-related tax
+consequences and dependencies are documented.
+
+Domain T2 | Local weight 3 | Route SEPARATION | Suggested contributor
+Tax adviser / group tax
+
+Tax scope and operational allocation
+
+Q49 can cover group tax arrangements, intercompany balances, transfer
+pricing and restructuring needs where applicable. It is not a tax
+opinion. Q46 measures operational service continuity, Q47 systems
+execution, and Q48 transitional agreement/process readiness. Link the
+facts but score each distinct control once.
+
+A legally separate company may still need all six controls. Conversely,
+documented absence of material group dependencies can exclude SEPARATION
+for a straightforward share disposal after the scope trigger is
+confirmed.
+
+17 Investor and transaction specific questions
+
+Q50 Demonstrated value creation
+
+Can improvements since the investor’s entry be separated from market
+movement and explained with evidence?
+
+0: The improvement narrative is not supported. 50: Main initiatives are
+documented without a full performance bridge. 100: Initiatives and
+performance effects are reconciled with clear limitations.
+
+Domain S3 | Local weight 2 | Route PE_CONTEXT | Suggested contributor
+Sponsor / CFO
+
+Q51 Converting instruments
+
+Are outstanding converting instruments mapped to transaction outcomes?
+
+0: Instruments or conversion consequences are unresolved. 50:
+Instruments are mapped with open scenario treatment. 100: Terms,
+conversion scenarios and consents are reconciled.
+
+Domain T3 | Local weight 3 | Route CONVERTIBLE | Suggested contributor
+Legal / CFO
+
+Q52 Cross border tax coordination
+
+Are tax workstreams across the relevant jurisdictions coordinated?
+
+0: Relevant jurisdictions lack coordinated coverage. 50: Advisers are
+identified; scope or dependencies remain open. 100: Jurisdictions,
+responsible advisers and dependencies are documented.
+
+Domain T2 | Local weight 3 | Route CROSS_BORDER | Suggested contributor
+Lead tax adviser
+
+Q53 Asset transfer execution
+
+Are legal transfer requirements for the proposed assets or business
+mapped?
+
+0: Material transfer requirements are unassessed. 50: Requirements are
+mapped with material gaps. 100: Assets, required transfers and relevant
+third-party steps are documented.
+
+Domain T3 | Local weight 3 | Route ASSET_TRANSFER | Suggested
+contributor Legal
+
+Q54 Post transaction governance
+
+Are the governance rights after the proposed partial transaction
+understood and aligned?
+
+0: Material future governance expectations conflict or are undefined.
+50: A proposal exists with material open points. 100: Governance
+expectations and required negotiation points are aligned.
+
+Domain S2 | Local weight 3 | Route PARTIAL | Suggested contributor
+Shareholders / legal
+
+Q55 Capital purpose and proceeds
+
+Are primary capital needs distinguished from any proceeds paid to
+selling shareholders?
+
+0: Company funding needs and seller liquidity are not distinguished. 50:
+An initial split exists without a fully linked funding plan. 100:
+Primary funding uses and any secondary proceeds are explicitly
+separated.
+
+Domain T1 | Local weight 2 | Route PRIMARY_CAPITAL | Suggested
+contributor CFO / shareholders
+
+Extension policy
+
+Additional sector modules may add controls to the existing domains after
+expert review. Prioritise questions on industrial technology
+rights/certification, recurring software economics and project-service
+continuity. Do not expose unsupported sectors as if their specialist
+assessment were already available. Offer a clearly described general
+route where appropriate.
+
+The target catalogue contains 55 registered controls. Q18 has the
+separate ACQUISITIONS predicate described in section 12; all other
+predicates appear in section 4. Do not create ownership-specific copies
+of shared controls in the score database.
+
+18 Data model and state handling
+
+Minimum entities
+
+  -----------------------------------------------------------------------
+  Entity        Required fields
+  ------------- ---------------------------------------------------------
+  Assessment    assessment_id; subject/perimeter; user role; confirmed
+                profile; ownership tags; objectives; jurisdictions;
+                horizon; active/pending modules; catalogue/scoring/report
+                versions; timestamps.
+
+  Question      id; domain; local_weight; route predicate; context
+  definition    wording; scored options/anchors; help; evidence request;
+                suggested contributor; linked task/risk rules.
+
+  Answer        question_id; status; option_id/points if substantive;
+                value if diagnostic; respondent; timestamp; source
+                version; previous answer reference; contradiction state.
+
+  Evidence      question_id; restricted reference; owner; as_of_date;
+  reference     review status; reviewer identity and date; access scope.
+
+  Task or issue source question/rule; priority class; reason; accountable
+                role; suggested timing; actual agreed due date;
+                dependencies; status; resolution record.
+
+  Result        Effective weights; numeric/null indices; coverage;
+  snapshot      bounds; evidence support; active risks; unresolved items;
+                full context/configuration version.
+  -----------------------------------------------------------------------
+
+Answer states
+
+SUBSTANTIVE stores a scored option. UNKNOWN,
+NEEDS_INTERNAL_CONFIRMATION, NEEDS_ADVISER_REVIEW, WITHHELD and
+CONFLICTED are unresolved and carry no points. NOT_APPLICABLE_REQUESTED
+remains unresolved until a rule or authorised reviewer confirms
+NOT_APPLICABLE_CONFIRMED. Confirmed N/A removes local weight; an
+explanation and provenance are mandatory. A whole domain with no
+applicable controls requires an approved model exception; do not
+silently redistribute its profile weight.
+
+INACTIVE answers remain stored for audit and are excluded from
+calculation. If a route reactivates, ask the user to reconfirm old
+answers. Never delete answers when a user edits a context field.
+Preserve both contributor submissions when they conflict; designate a
+responsible resolver.
+
+State sequence
+
+CONTEXT → DISCOVERY → INITIAL_PICTURE → DEEP_ASSESSMENT → RESULT. SAVED
+can resume any stage. SPECIALIST_PATH and APPLICABILITY_PENDING can
+interrupt the sequence. Result status is data_complete or
+data_incomplete plus a separate risk status. All transitions must be
+resumable and versioned.
+
+Recalculation order: validate context → resolve applicable controls →
+detect contradictions → compute domain denominators/effective weights →
+compute coverage/indices/bounds/evidence → apply risk rules → generate
+tasks → render deterministic result → optionally generate narrative. The
+language model cannot change scores, routes or risk status.
+
+19 Report and action plan requirements
+
+Result layout
+
+Business economics, customer structure and operational resilience can be
+important to buyers even when preparation is excellent. The report
+should disclose relevant facts and risks alongside readiness; a 100
+readiness result does not mean maximum investment attractiveness.
+
+-   Show the user’s selected transaction context, perimeter and intended
+    horizon, then the three dimensions with coverage and evidence
+    support.
+
+-   Display critical prerequisites and unresolved specialist matters
+    prominently, with a clear distinction between confirmed facts and
+    items requiring review.
+
+-   Present up to three supported strengths and the highest-priority
+    preparation actions. Each statement links back to answer IDs.
+
+-   Provide a separate tax preparation section, even when its conclusion
+    is “Not yet assessed”. Distinguish company-level, seller-level and
+    cross-border work.
+
+-   Show the full task list, accountable roles and dependencies. Make
+    the output usable across several sessions and contributors.
+
+Default action templates by domain
+
+  ------------------------------------------------------------------------
+  ID     Action when a control is incomplete           Suggested lead
+  ------ --------------------------------------------- -------------------
+  S1     Document objectives, timeline and transaction Shareholders /
+         scope.                                        transaction lead
+
+  S2     Resolve alignment and obtain a                Board / legal
+         decision/approval map.                        
+
+  S3     Compare alternatives and document the         Strategy / adviser
+         post-transaction plan.                        
+
+  O1     Reconcile economics and prepare a funding     CFO
+         scenario response.                            
+
+  O2     Quantify material commercial dependencies and Commercial /
+         response plans.                               operations
+
+  O3     Establish authority, cover and relationship   CEO / people /
+         continuity.                                   separation lead
+
+  O4     Document execution capacity, systems          Operations / IT
+         continuity and integration.                   
+
+  O5     Support the proposition and roadmap with      Commercial /
+         evidence.                                     product
+
+  T1     Prepare reconciled financial support and      CFO / adviser
+         purchase-price inputs.                        
+
+  T2     Commission transaction-specific tax review    Relevant sellers’
+         and close open points.                        and company tax
+                                                       advisers
+
+  T3     Reconcile title/rights and prepare consents   Legal
+         or remediation.                               
+
+  T4     Assign the project team, disclosure controls  Transaction lead
+         and issue plan.                               
+  ------------------------------------------------------------------------
+
+Specialise each task using the unanswered anchor and factual context.
+The same tax issue may need separate seller and company tasks; never
+share a seller’s private tax information with all company contributors
+by default.
+
+20 Narrative governance and collaboration
+
+Generation contract
+
+Generate prose only from a validated result object containing answer
+IDs, computed metrics, permitted evidence summaries and approved action
+templates. The report must distinguish “You reported”, “This may imply”
+and “Suggested next step”. It must not describe self-reported documents
+as independently verified.
+
+-   Prohibit unsupported valuation estimates, multiple uplifts,
+    buyer-wide assertions, tax savings, legal conclusions and invented
+    market benchmarks.
+
+-   Do not label 70% a market buyer expectation. If internal bands are
+    used, label them as model-defined preparation levels and publish
+    their definitions.
+
+-   Validate required sections, referenced IDs, score consistency and
+    complete sentence endings before publication. Reject and fall back
+    to a deterministic template if generation is truncated or
+    inconsistent.
+
+-   Render the deterministic result immediately. Narrative generation
+    may run asynchronously with progress and a retry path. Keep
+    completed answers safe on failure.
+
+Permissions and contribution
+
+Default access is private to the assessment owner. A respondent role is
+descriptive and does not grant access. Inviting a CFO, legal adviser or
+tax adviser requires explicit selection of recipient and permitted
+module scope. Give participants only the information necessary for their
+assigned work. Maintain an audit trail and permit revocation.
+
+Seller-level tax records require a separately scoped area. Provide
+aggregate status to the main assessment where permitted; do not reveal
+private seller circumstances or conclusions to management or other
+shareholders by default. Users may record a status or adviser
+confirmation without uploading source documents.
+
+Data and lead handling
+
+Explain storage, AI processing, retention and deletion before collecting
+substantive data. Match wording to actual implementation and the
+approved privacy notice. Do not promise anonymity if answers are stored
+against an identifiable session or later linked to contact data.
+
+Assessment completion, report delivery, adviser contact and marketing
+opt-in are distinct actions. Do not automatically open a contact form
+over the result. Offer an optional review of identified gaps after the
+user has seen useful findings.
+
+Analytics
+
+Record stage views, starts, theme completion, route changes, saves,
+resumes, result views and optional contact requests using minimal event
+metadata. Exclude answer text, tax details, evidence links and document
+content. Segment by approved broad context, channel and device where
+appropriate. Deduplicate internal tests and obtain the required privacy
+review before instrumentation.
+
+21 Acceptance tests and calibration
+
+  -----------------------------------------------------------------------
+  Test            Expected behaviour
+  --------------- -------------------------------------------------------
+  Weight totals   Every profile sums to 100 separately for S, O and T.
+                  Effective question weights sum to 100 per applicable
+                  dimension.
+
+  All full        All applicable answers 100: indices 100, coverage 100.
+  anchors         Evidence may still be 0 and must be shown separately.
+
+  All absent      All applicable answers 0: indices 0, coverage 100;
+  anchors         issues/tasks remain visible.
+
+  All unknown     Indices null, coverage 0, ranges 0–100. No complete
+                  result or favourable readiness label.
+
+  Partial domain  For local weights 3/2/1 and 100/50/UNKNOWN: 80
+                  answered-only, 83.3% coverage and 66.7–83.3 bounds.
+
+  N/A requested   No weight removal until confirmed. Recompute after
+                  confirmation, preserving the audit record.
+
+  Mixed founder   Use the user-confirmed profile once. Retain continuity
+  and PE          controls and activate PE_CONTEXT without duplicate
+                  scoring.
+
+  Corporate share SEPARATION follows actual dependency; ASSET_TRANSFER
+  disposal        stays inactive unless assets/business transfer is
+                  proposed.
+
+  VC growth       No automatic adverse profitability score. Use Q07
+  losses          growth-economics wording; assess cash needs through
+                  Q08.
+
+  Tax history     Past restructuring activates specialist review of Q28.
+                  It does not automatically assert a tax charge or
+                  critical deadline.
+
+  Preference and  Activate Q38 for VC/PE tags and Q51 for outstanding
+  notes           notes. Reconcile rights and conversion scenarios
+                  separately.
+
+  Edited trigger  Deactivate relevant answers without deleting them;
+                  display the route change and require reconfirmation
+                  upon reactivation.
+
+  Conflicting     Affected controls become CONFLICTED and leave known
+  contributors    coverage until authorised resolution.
+
+  Narrative       No partial report is published. Deterministic results
+  failure         and tasks remain available.
+
+  Restricted tax  A company contributor cannot view seller-private tax
+  access          evidence without explicit permission.
+  -----------------------------------------------------------------------
+
+Calibration before release
+
+Use at least four expert-reviewed archetypes, including a
+mixed-ownership case and a separation case. Have atares professionals
+score the same scenarios independently, compare disagreements, and
+revise anchors before tuning weights. Test threshold sensitivity and
+whether profile changes create unreasonable jumps. Run user sessions
+across owners, CFOs, corporate M&A and investors. There is no promised
+conversion uplift until observed in real use.
+
+Pilot discovery-to-depth continuation, assessment completion,
+saves/resumes, unresolved rates and qualified follow-up conversations.
+Evaluate commercial lead quality separately from readiness scores. Keep
+the question and scoring version fixed during each comparison period.
+
+22 Release decisions and tax references
+
+Recommended implementation order
+
+-   Release 1: repair report completeness; separate deterministic
+    results from generated text; implement context fields, combined
+    routes, three dimensions, unknown/N/A rules, all applicable critical
+    prerequisites, core tax preparation and save/resume.
+
+-   Release 2: add scoped multi-contributor workflows, explicit evidence
+    review, richer separation/venture task guidance and improved module
+    planning. Until collaboration ships, offer a private export/task
+    list rather than claiming controlled invitations are available.
+
+-   Release 3: calibrate weights with observed assessments; expand
+    sector and jurisdiction modules after content-owner approval. Retire
+    unsupported score labels and maintain backwards-comparable versions.
+
+A production scoring route is available only when all its applicable
+required controls are implemented. If a supported context is not yet
+fully implemented, provide discovery and a clearly identified specialist
+pathway rather than a partial full-readiness score.
+
+Decisions to approve before coding the scoring engine
+
+Product owner: approve the staged journey, absence of a single aggregate
+score, supported transaction scope and role-based wording. M&A content
+owner: approve all 55 anchors, domain allocations, profile matrices,
+critical predicates and task language. Tax/legal owners: approve their
+module content, jurisdiction routing and privacy boundaries.
+Engineering: approve versioning, state transitions, permissions and test
+fixtures. These are internal implementation sign-offs, not a need to ask
+end users for repeated confirmation during an assessment.
+
+Tax scope and sources
+
+The tax module assesses preparation. It does not calculate liability,
+recommend a holding structure or determine whether a particular tax
+treatment applies. Germany is an illustrative jurisdiction, not the
+default for all users. For unsupported jurisdictions, retain generic
+preparation questions and show that local advice is required; do not
+claim local-law coverage.
+
+In Germany, share disposal treatment can differ depending on the seller
+and circumstances, including provisions in section 17 EStG and section
+8b KStG. Certain contributions/share exchanges can have seven-year
+subsequent-taxation consequences under section 22 UmwStG. The relevant
+transaction history therefore needs adviser review. No automatic
+seven-year rule should be applied to every restructuring.
+
+German Income Tax Act section 17 EStG
+
+German Corporation Tax Act section 8b KStG
+
+German Reorganisation Tax Act section 22 UmwStG
+
+Source check date: 4 November 2026. Statutory references support the
+need for case-specific review. The product weights and thresholds are
+atares calibration proposals rather than legal requirements.
+
+Definition of done
+
+A development handover is complete when each route has an owner, every
+displayed question maps to a stable control or unscored diagnostic,
+every point and weight is reproducible, incomplete answers cannot
+masquerade as complete readiness, and a user can convert the result into
+an owned preparation plan.

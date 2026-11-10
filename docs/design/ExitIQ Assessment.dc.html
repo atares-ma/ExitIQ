@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>ExitIQ Assessment · atares M&amp;A</title>
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#002336;font-family:"Noto Sans",Arial,Helvetica,sans-serif;color:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#00C3BF;text-decoration:none}
+a:hover{color:#FFFFFF}
+*{box-sizing:border-box}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:linear-gradient(rgba(0,35,54,0.62),rgba(0,35,54,0.78)),url(assets/bg-dark.jpg) center/cover fixed no-repeat,#002336;display:flex;flex-direction:column">
+
+<header data-screen-label="Assessment header" style="position:sticky;top:0;z-index:20;background:rgba(0,35,54,0.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.08)">
+  <div style="max-width:1280px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px 24px;flex-wrap:wrap">
+    <a href="ExitIQ Landing v2.dc.html" style="display:flex;align-items:center;gap:14px">
+      <img src="assets/atares-logo-white.png" alt="atares" style="height:26px;width:auto;display:block">
+      <span style="width:1px;height:22px;background:rgba(255,255,255,0.24)"></span>
+      <span style="font-size:18px;font-weight:800;color:#FFFFFF">Exit<span style="color:#00C3BF">IQ</span></span>
+    </a>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <sc-for list="{{ stepper }}" as="sp" hint-placeholder-count="5">
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;background:{{ sp.bg }};color:{{ sp.fg }};border:1px solid {{ sp.border }}">
+          <span style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;background:{{ sp.dotBg }};color:{{ sp.dotFg }}">{{ sp.mark }}</span>{{ sp.label }}
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;font-size:13px;white-space:nowrap">
+      <span style="color:rgba(255,255,255,0.7)">{{ savedLabel }}</span>
+      <div tabindex="0" onClick="{{ saveExit }}" style="padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,0.22);cursor:pointer;font-weight:600" style-hover="border-color:#00C3BF">Save and return later</div>
+    </div>
+  </div>
+</header>
+
+<sc-if value="{{ showDemo }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:1280px;width:100%;margin:12px auto 0;padding:0 24px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12px;color:rgba(255,255,255,0.7)">
+    <span style="font-weight:700;color:#B7FDFC">Prototype tools</span>
+    <div tabindex="0" onClick="{{ demoFill }}" style="padding:5px 10px;border-radius:999px;border:1px dashed rgba(183,253,252,0.5);cursor:pointer">Fill sample answers and open the action plan</div>
+    <div tabindex="0" onClick="{{ reset }}" style="padding:5px 10px;border-radius:999px;border:1px dashed rgba(255,255,255,0.3);cursor:pointer">Reset</div>
+    <sc-for list="{{ jumps }}" as="j" hint-placeholder-count="6">
+      <div tabindex="0" onClick="{{ j.pick }}" style="padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);cursor:pointer">{{ j.label }}</div>
+    </sc-for>
+  </div>
+</sc-if>
+
+<main style="flex:1;width:100%">
+
+<sc-if value="{{ isContext }}" hint-placeholder-val="{{ true }}">
+  <section data-screen-label="Context" style="max-width:880px;margin:0 auto;padding:48px 24px 72px;display:flex;flex-direction:column;gap:24px">
+    <div key="{{ screen }}" style="display:flex;flex-direction:column;gap:10px;animation:fadeUp .3s ease-out">
+      <div style="font-size:14px;font-weight:700;color:#00C3BF">{{ ctx.kicker }}</div>
+      <h1 style="margin:0;font-size:clamp(28px,3.4vw,40px);line-height:1.15;font-weight:800;letter-spacing:-0.02em;text-wrap:balance">{{ ctx.title }}</h1>
+      <p style="margin:0;font-size:16px;line-height:1.6;color:rgba(255,255,255,0.84);max-width:680px">{{ ctx.sub }}</p>
+    </div>
+    <sc-for list="{{ ctx.fields }}" as="f" hint-placeholder-count="3">
+      <div style="border-radius:24px;border:1px solid rgba(255,255,255,0.2);background:linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.08));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 20px 48px rgba(0,35,54,0.24);padding:24px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:18px;font-weight:700;line-height:1.35">{{ f.label }}</div>
+          <div style="font-size:13px;line-height:1.5;color:rgba(255,255,255,0.72)">{{ f.why }}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,{{ f.min }}),1fr));gap:8px">
+          <sc-for list="{{ f.opts }}" as="o" hint-placeholder-count="4">
+            <div role="{{ o.role }}" aria-checked="{{ o.checked }}" tabindex="0" onClick="{{ o.pick }}" style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;cursor:pointer;border:1px solid {{ o.border }};background:{{ o.bg }};transition:all .18s" style-hover="border-color:rgba(255,255,255,0.42)">
+              <div style="width:18px;height:18px;margin-top:1px;flex:none;border-radius:{{ o.radius }};border:2px solid {{ o.ring }};background:{{ o.fill }};display:flex;align-items:center;justify-content:center;color:#002336;font-size:11px;font-weight:800">{{ o.mark }}</div>
+              <div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:0">
+                <div style="display:flex;gap:8px;align-items:baseline;justify-content:space-between;flex-wrap:wrap"><span style="font-size:15px;line-height:1.4">{{ o.label }}</span><span style="font-size:11px;font-weight:700;color:{{ o.tagColor }}">{{ o.tag }}</span></div>
+                <span style="font-size:13px;line-height:1.45;color:rgba(255,255,255,0.68)">{{ o.sub }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-top:8px">
+      <div tabindex="0" onClick="{{ ctx.back }}" style="padding:12px 20px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);cursor:pointer;font-size:15px;opacity:{{ ctx.backOpacity }}" style-hover="border-color:#00C3BF">Back</div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:13px;color:rgba(255,255,255,0.7)">{{ ctx.hint }}</span>
+        <div tabindex="0" onClick="{{ ctx.next }}" style="padding:13px 24px;border-radius:999px;background:{{ ctx.nextBg }};color:#002336;font-weight:700;font-size:15px;cursor:pointer">{{ ctx.nextLabel }}</div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isSummary }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Configuration summary" style="max-width:960px;margin:0 auto;padding:48px 24px 72px;display:flex;flex-direction:column;gap:24px;animation:fadeUp .3s ease-out">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:14px;font-weight:700;color:#00C3BF">Before we start</div>
+      <h1 style="margin:0;font-size:clamp(28px,3.4vw,40px);line-height:1.15;font-weight:800;letter-spacing:-0.02em">Check how your assessment is set up.</h1>
+      <p style="margin:0;font-size:16px;line-height:1.6;color:rgba(255,255,255,0.84);max-width:680px">This configuration decides which questions apply and how they are weighted. Correct anything that does not fit.</p>
+    </div>
+    <sc-for list="{{ banners }}" as="bn" hint-placeholder-count="0">
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border-radius:16px;border:1px solid {{ bn.border }};background:{{ bn.bg }};font-size:15px;line-height:1.55">
+        <span style="flex:none;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:{{ bn.tagBg }};color:{{ bn.tagFg }}">{{ bn.tag }}</span><span>{{ bn.text }}</span>
+      </div>
+    </sc-for>
+    <div style="border-radius:24px;background:#FFFFFF;color:#002336;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.3)">
+      <sc-for list="{{ summaryRows }}" as="r" hint-placeholder-count="5">
+        <div style="display:grid;grid-template-columns:minmax(140px,200px) minmax(0,1fr) auto;gap:16px;align-items:start;padding:18px 24px;border-bottom:1px solid #E5E9EC">
+          <span style="font-size:13px;font-weight:700;color:#324E5E;padding-top:2px">{{ r.label }}</span>
+          <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+            <span style="font-size:16px;font-weight:600;line-height:1.45">{{ r.value }}</span>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <sc-for list="{{ r.chips }}" as="c" hint-placeholder-count="0">
+                <span style="padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ c.bg }};color:{{ c.fg }};border:1px solid {{ c.border }}">{{ c.label }}</span>
+              </sc-for>
+            </div>
+          </div>
+          <div tabindex="0" onClick="{{ r.edit }}" style="font-size:13px;font-weight:700;color:#007775;cursor:pointer;padding-top:2px" style-hover="color:#002336">Edit</div>
+        </div>
+      </sc-for>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:22px 24px;background:#F2F3F4">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:20px;font-weight:800">{{ countLabel }}</span>
+          <span style="font-size:13px;color:#324E5E;line-height:1.5">{{ countSub }}</span>
+        </div>
+        <div tabindex="0" onClick="{{ startDiscovery }}" style="padding:13px 24px;border-radius:999px;background:#BEFC00;color:#002336;font-weight:700;font-size:15px;cursor:pointer" style-hover="background:#DFFE00">Start discovery →</div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isDiscovery }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Discovery" style="max-width:820px;margin:0 auto;padding:40px 24px 72px;display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <span style="padding:6px 12px;border-radius:999px;background:rgba(0,35,54,0.7);border:1px solid rgba(255,255,255,0.14);font-size:13px;font-weight:700">Discovery · {{ disc.theme }}</span>
+      <span style="font-size:13px;color:rgba(255,255,255,0.74)">{{ disc.progress }}</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px">
+      <sc-for list="{{ disc.dots }}" as="d" hint-placeholder-count="8">
+        <div style="height:4px;border-radius:2px;background:{{ d.bg }}"></div>
+      </sc-for>
+    </div>
+    <div key="{{ disc.key }}" style="border-radius:24px;border:1px solid rgba(255,255,255,0.22);background:linear-gradient(180deg,rgba(255,255,255,0.16),rgba(255,255,255,0.10));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 20px 48px rgba(0,35,54,0.28);padding:28px;display:flex;flex-direction:column;gap:18px;animation:fadeUp .3s ease-out">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:24px;font-weight:700;line-height:1.35;text-wrap:pretty">{{ disc.title }}</div>
+        <div style="font-size:14px;line-height:1.55;color:rgba(255,255,255,0.76)">{{ disc.help }}</div>
+      </div>
+      <div role="{{ disc.role }}" style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ disc.opts }}" as="o" hint-placeholder-count="3">
+          <div role="{{ o.role }}" aria-checked="{{ o.checked }}" tabindex="0" onClick="{{ o.pick }}" style="display:flex;gap:12px;align-items:center;padding:13px 15px;border-radius:14px;cursor:pointer;border:1px solid {{ o.border }};background:{{ o.bg }};font-size:15px;line-height:1.45;transition:all .18s" style-hover="border-color:rgba(255,255,255,0.42)">
+            <div style="width:18px;height:18px;flex:none;border-radius:{{ o.radius }};border:2px solid {{ o.ring }};background:{{ o.fill }};display:flex;align-items:center;justify-content:center;color:#002336;font-size:11px;font-weight:800">{{ o.mark }}</div>
+            <span>{{ o.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <sc-for list="{{ disc.stats }}" as="s" hint-placeholder-count="3">
+          <div tabindex="0" onClick="{{ s.pick }}" style="padding:6px 12px;border-radius:999px;font-size:13px;cursor:pointer;border:1px dashed {{ s.border }};background:{{ s.bg }};color:rgba(255,255,255,0.86)">{{ s.label }}</div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ disc.reuse }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:12px;color:#B7FDFC">This answer is reused in the detailed assessment, so you will not be asked again.</div>
+      </sc-if>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div tabindex="0" onClick="{{ disc.back }}" style="padding:12px 20px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);cursor:pointer;font-size:15px" style-hover="border-color:#00C3BF">Back</div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <div tabindex="0" onClick="{{ disc.skip }}" style="padding:12px 16px;font-size:14px;color:rgba(255,255,255,0.78);cursor:pointer">Skip for now</div>
+        <div tabindex="0" onClick="{{ disc.next }}" style="padding:13px 24px;border-radius:999px;background:{{ disc.nextBg }};color:#002336;font-weight:700;font-size:15px;cursor:pointer">{{ disc.nextLabel }}</div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isPicture }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Initial picture" style="max-width:960px;margin:0 auto;padding:48px 24px 72px;display:flex;flex-direction:column;gap:24px;animation:fadeUp .3s ease-out">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:14px;font-weight:700;color:#00C3BF">Your initial picture</div>
+      <h1 style="margin:0;font-size:clamp(28px,3.4vw,40px);line-height:1.15;font-weight:800;letter-spacing:-0.02em;color:#BEFC00;text-wrap:balance">Your first answers highlight the areas worth exploring.</h1>
+      <p style="margin:0;font-size:16px;line-height:1.6;color:rgba(255,255,255,0.86);max-width:700px">These observations are based only on what you answered. There is no readiness score yet. That needs the detailed assessment.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px">
+      <sc-for list="{{ observations }}" as="ob" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:column;gap:12px;padding:22px;border-radius:20px;border:1px solid rgba(255,255,255,0.2);background:linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.08));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)">
+          <span style="font-size:12px;font-weight:700;color:{{ ob.color }}">{{ ob.tag }}</span>
+          <span style="font-size:16px;line-height:1.6">{{ ob.text }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;padding:20px 22px;border-radius:18px;background:rgba(0,35,54,0.55);border:1px solid rgba(255,255,255,0.12)">
+      <span style="font-size:14px;font-weight:700">Areas that need more detail</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <sc-for list="{{ gaps }}" as="g" hint-placeholder-count="3">
+          <span style="padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.22);font-size:13px">{{ g }}</span>
+        </sc-for>
+      </div>
+    </div>
+    <div style="border-radius:24px;background:#FFFFFF;color:#002336;padding:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:20px;font-weight:800">Continue to the detailed assessment</span>
+        <span style="font-size:15px;line-height:1.6;color:#324E5E">Review the supporting figures, ownership arrangements, tax preparation and practical steps. {{ deepCountLabel }} You can pause at any time or ask a colleague to help.</span>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+        <div tabindex="0" onClick="{{ saveExit }}" style="padding:13px 20px;border-radius:999px;border:1px solid #003E5F;cursor:pointer;font-weight:600">Save and return</div>
+        <div tabindex="0" onClick="{{ startDeep }}" style="padding:13px 24px;border-radius:999px;background:#003E5F;color:#FFFFFF;font-weight:700;cursor:pointer" style-hover="background:#002336">Continue preparation →</div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isDeep }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Detailed assessment" style="max-width:1280px;margin:0 auto;padding:32px 24px 72px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px;align-items:start">
+    <aside style="display:flex;flex-direction:column;gap:8px;position:sticky;top:96px;max-width:360px">
+      <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.7);padding:0 4px 4px">Chapters</div>
+      <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="6">
+        <div tabindex="0" onClick="{{ c.pick }}" style="display:flex;flex-direction:column;gap:8px;padding:14px 16px;border-radius:16px;cursor:pointer;border:1px solid {{ c.border }};background:{{ c.bg }};transition:all .18s" style-hover="border-color:rgba(255,255,255,0.4)">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline"><span style="font-size:14px;font-weight:700;line-height:1.35">{{ c.title }}</span><span style="font-size:12px;color:rgba(255,255,255,0.74);white-space:nowrap">{{ c.count }}</span></div>
+          <div style="height:4px;background:rgba(255,255,255,0.12);border-radius:2px"><div style="height:100%;width:{{ c.w }};background:#00C3BF;border-radius:2px"></div></div>
+        </div>
+      </sc-for>
+      <div tabindex="0" onClick="{{ goResult }}" style="margin-top:8px;padding:12px 16px;border-radius:999px;background:#BEFC00;color:#002336;font-weight:700;font-size:14px;text-align:center;cursor:pointer" style-hover="background:#DFFE00">See action plan</div>
+      <div style="font-size:12px;line-height:1.5;color:rgba(255,255,255,0.66);padding:4px">{{ deepOverall }}</div>
+    </aside>
+
+    <div style="display:flex;flex-direction:column;gap:18px;grid-column:span 2;min-width:0">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:14px;font-weight:700;color:#00C3BF">{{ dq.chapter }}</div>
+        <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:rgba(255,255,255,0.78)"><span>{{ dq.themeProgress }}</span><span>{{ dq.idLabel }}</span></div>
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <sc-for list="{{ dq.mini }}" as="m" hint-placeholder-count="6">
+          <div tabindex="0" onClick="{{ m.pick }}" title="{{ m.title }}" style="width:28px;height:8px;border-radius:4px;cursor:pointer;background:{{ m.bg }};outline:{{ m.outline }};outline-offset:2px"></div>
+        </sc-for>
+      </div>
+      <div key="{{ dq.key }}" style="border-radius:24px;border:1px solid rgba(255,255,255,0.22);background:linear-gradient(180deg,rgba(255,255,255,0.16),rgba(255,255,255,0.10));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 20px 48px rgba(0,35,54,0.28);padding:28px;display:flex;flex-direction:column;gap:18px;animation:fadeUp .3s ease-out">
+        <sc-if value="{{ dq.pending }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:12px;font-weight:700;color:#DFFE00">Applicability unresolved. This question stays open until the related topic is clarified.</div>
+        </sc-if>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:13px;font-weight:700;color:#B7FDFC">{{ dq.name }}</div>
+          <div style="font-size:23px;font-weight:700;line-height:1.35;text-wrap:pretty">{{ dq.title }}</div>
+        </div>
+        <div role="radiogroup" style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ dq.opts }}" as="o" hint-placeholder-count="3">
+            <div role="radio" aria-checked="{{ o.checked }}" tabindex="0" onClick="{{ o.pick }}" style="display:flex;gap:12px;align-items:center;padding:13px 15px;border-radius:14px;cursor:pointer;border:1px solid {{ o.border }};background:{{ o.bg }};font-size:15px;line-height:1.45;transition:all .18s" style-hover="border-color:rgba(255,255,255,0.42)">
+              <div style="width:18px;height:18px;flex:none;border-radius:50%;border:2px solid {{ o.ring }};background:{{ o.fill }}"></div>
+              <span>{{ o.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ dq.stats }}" as="s" hint-placeholder-count="5">
+            <div tabindex="0" onClick="{{ s.pick }}" style="padding:6px 12px;border-radius:999px;font-size:13px;cursor:pointer;border:1px dashed {{ s.border }};background:{{ s.bg }};color:rgba(255,255,255,0.86)">{{ s.label }}</div>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.12)">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.7)">Suggested contributor</span>
+            <span style="font-size:14px;font-weight:600">{{ dq.contributor }}</span>
+            <div tabindex="0" onClick="{{ dq.assign }}" style="align-self:flex-start;padding:7px 12px;border-radius:999px;font-size:13px;cursor:pointer;border:1px solid {{ dq.assignBorder }};background:{{ dq.assignBg }}">{{ dq.assignLabel }}</div>
+          </div>
+          <sc-if value="{{ dq.showEvidence }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.7)">Evidence support</span>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <sc-for list="{{ dq.evOpts }}" as="e" hint-placeholder-count="2">
+                  <div tabindex="0" onClick="{{ e.pick }}" style="padding:7px 12px;border-radius:999px;font-size:13px;cursor:pointer;border:1px solid {{ e.border }};background:{{ e.bg }}">{{ e.label }}</div>
+                </sc-for>
+              </div>
+              <span style="font-size:12px;line-height:1.45;color:rgba(255,255,255,0.62)">Full support requires a review by an authorised reviewer. An upload alone does not count.</span>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div tabindex="0" onClick="{{ dq.prev }}" style="padding:12px 20px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);cursor:pointer;font-size:15px;opacity:{{ dq.prevOpacity }}" style-hover="border-color:#00C3BF">Back</div>
+        <div tabindex="0" onClick="{{ dq.next }}" style="padding:13px 24px;border-radius:999px;background:#BEFC00;color:#002336;font-weight:700;font-size:15px;cursor:pointer" style-hover="background:#DFFE00">{{ dq.nextLabel }}</div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Action plan" style="animation:fadeUp .3s ease-out">
+    <div style="max-width:1200px;margin:0 auto;padding:48px 24px 36px;display:flex;flex-direction:column;gap:18px">
+      <div style="font-size:14px;font-weight:700;color:#00C3BF">Action plan · {{ dateLabel }}</div>
+      <h1 style="margin:0;font-size:clamp(30px,3.6vw,46px);line-height:1.1;font-weight:800;letter-spacing:-0.02em;color:#BEFC00;text-wrap:balance">{{ resultHeadline }}</h1>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <sc-for list="{{ ctxChips }}" as="c" hint-placeholder-count="4">
+          <span style="padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.22);background:rgba(0,35,54,0.5);font-size:13px">{{ c }}</span>
+        </sc-for>
+      </div>
+    </div>
+    <div style="background:#FFFFFF;color:#002336">
+      <div style="max-width:1200px;margin:0 auto;padding:48px 24px 80px;display:flex;flex-direction:column;gap:48px">
+
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap">
+            <h2 style="margin:0;font-size:26px;font-weight:800">Three readiness dimensions</h2>
+            <span style="font-size:13px;color:#324E5E">{{ profileNote }}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px">
+            <sc-for list="{{ dims }}" as="d" hint-placeholder-count="3">
+              <div style="display:flex;flex-direction:column;gap:16px;padding:24px;border-radius:20px;border:1px solid #CBD2D6;background:#FFFFFF">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
+                  <span style="font-size:18px;font-weight:800">{{ d.name }}</span>
+                  <span style="font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:{{ d.statusBg }};color:{{ d.statusFg }}">{{ d.status }}</span>
+                </div>
+                <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+                  <span style="font-size:44px;font-weight:800;line-height:1;color:{{ d.indexColor }}">{{ d.index }}</span>
+                  <span style="font-size:13px;color:#324E5E;line-height:1.4">{{ d.range }}</span>
+                </div>
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;font-size:12px;color:#324E5E">
+                  <div style="display:flex;flex-direction:column;gap:6px"><span>{{ d.covLabel }}</span><div style="height:6px;background:#F2F3F4;border-radius:3px"><div style="height:100%;width:{{ d.covW }};background:#003E5F;border-radius:3px"></div></div></div>
+                  <div style="display:flex;flex-direction:column;gap:6px"><span>{{ d.evLabel }}</span><div style="height:6px;background:#F2F3F4;border-radius:3px"><div style="height:100%;width:{{ d.evW }};background:#007775;border-radius:3px"></div></div></div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:10px;padding-top:12px;border-top:1px solid #E5E9EC">
+                  <sc-for list="{{ d.domains }}" as="dm" hint-placeholder-count="4">
+                    <div style="display:flex;flex-direction:column;gap:5px">
+                      <div style="display:flex;justify-content:space-between;gap:10px;font-size:13px"><span style="font-weight:600">{{ dm.name }}</span><span style="color:#324E5E;white-space:nowrap">{{ dm.label }}</span></div>
+                      <div style="height:6px;background:#F2F3F4;border-radius:3px;overflow:hidden;display:flex"><div style="height:100%;width:{{ dm.w }};background:{{ dm.color }}"></div><div style="height:100%;width:{{ dm.openW }};background:repeating-linear-gradient(45deg,#CBD2D6 0 3px,#F2F3F4 3px 6px)"></div></div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size:13px;line-height:1.6;color:#324E5E;max-width:880px">An index is shown when at least 80% of a dimension’s weighted questions are answered and every area is at least half answered. The range shows the lowest and highest result your open answers could still produce. Hatched bars mark open questions.</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:24px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <h2 style="margin:0;font-size:22px;font-weight:800">Risk status</h2>
+            <div style="font-size:14px;line-height:1.55;color:#324E5E">Shown separately so that a strong result elsewhere cannot hide a time-critical issue.</div>
+            <sc-for list="{{ risks }}" as="r" hint-placeholder-count="2">
+              <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;border:1px solid {{ r.border }};font-size:14px;line-height:1.55">
+                <span style="flex:none;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:{{ r.bg }};color:{{ r.fg }}">{{ r.tag }}</span>
+                <span>{{ r.text }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <h2 style="margin:0;font-size:22px;font-weight:800">Supported strengths</h2>
+            <div style="font-size:14px;line-height:1.55;color:#324E5E">Up to three, each linked to the answer it comes from.</div>
+            <sc-for list="{{ strengths }}" as="s" hint-placeholder-count="3">
+              <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:#F2F3F4;font-size:14px;line-height:1.55">
+                <span style="flex:none;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:#003E5F;color:#FFFFFF">{{ s.id }}</span>
+                <span><strong>{{ s.name }}.</strong> {{ s.text }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap">
+            <h2 style="margin:0;font-size:26px;font-weight:800">Priority actions</h2>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <sc-for list="{{ taskFilters }}" as="tf" hint-placeholder-count="4">
+                <div tabindex="0" onClick="{{ tf.pick }}" style="padding:7px 14px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid #003E5F;background:{{ tf.bg }};color:{{ tf.fg }}">{{ tf.label }}</div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="border:1px solid #CBD2D6;border-radius:20px;overflow:hidden">
+            <sc-for list="{{ tasks }}" as="t" hint-placeholder-count="5">
+              <div style="display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px;align-items:start;padding:16px 20px;border-bottom:1px solid #E5E9EC;background:#FFFFFF">
+                <span style="font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:{{ t.bg }};color:{{ t.fg }};white-space:nowrap">{{ t.tag }}</span>
+                <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+                  <span style="font-size:15px;font-weight:700;line-height:1.4">{{ t.title }}</span>
+                  <span style="font-size:13px;line-height:1.5;color:#324E5E">{{ t.reason }}</span>
+                  <span style="font-size:12px;color:#5B6E78">{{ t.meta }}</span>
+                </div>
+                <div tabindex="0" onClick="{{ t.open }}" style="font-size:13px;font-weight:700;color:#007775;cursor:pointer;white-space:nowrap" style-hover="color:#002336">{{ t.action }}</div>
+              </div>
+            </sc-for>
+            <div tabindex="0" onClick="{{ toggleAllTasks }}" style="padding:14px 20px;background:#F2F3F4;font-size:14px;font-weight:700;color:#003E5F;cursor:pointer">{{ tasksMoreLabel }}</div>
+          </div>
+          <div style="font-size:12px;line-height:1.55;color:#5B6E78">Timings are planning suggestions, not legal deadlines. Critical items first, then open facts, then preparation gaps ranked by their weight in the dimension.</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:24px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:12px;padding:24px;border-radius:20px;background:#003E5F;color:#FFFFFF">
+            <h2 style="margin:0;font-size:20px;font-weight:800">Tax preparation</h2>
+            <div style="font-size:14px;line-height:1.55;color:rgba(255,255,255,0.84)">This measures preparation and specialist review. It is not tax advice and does not assess how tax-efficient a structure is.</div>
+            <sc-for list="{{ taxRows }}" as="x" hint-placeholder-count="5">
+              <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,0.14);font-size:14px">
+                <span>{{ x.name }}</span><span style="font-weight:700;color:{{ x.color }};white-space:nowrap">{{ x.status }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;padding:24px;border-radius:20px;background:#F2F3F4">
+            <h2 style="margin:0;font-size:20px;font-weight:800">What this report does not show</h2>
+            <div style="font-size:14px;line-height:1.65;color:#324E5E">No overall exit score, no valuation, no sale probability and no implied multiple. A high readiness result describes preparation. It does not mean maximum attractiveness to investors, and business economics or customer structure can matter to buyers regardless.</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;padding-top:8px">
+              <div tabindex="0" onClick="{{ startDeep }}" style="padding:11px 18px;border-radius:999px;background:#003E5F;color:#FFFFFF;font-weight:700;font-size:14px;cursor:pointer">Continue answering</div>
+              <div style="padding:11px 18px;border-radius:999px;border:1px solid #003E5F;font-weight:600;font-size:14px;cursor:pointer">Download PDF</div>
+              <div style="padding:11px 18px;border-radius:999px;border:1px solid #003E5F;font-weight:600;font-size:14px;cursor:pointer">Discuss with atares</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isSaved }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Saved" style="max-width:640px;margin:0 auto;padding:96px 24px;display:flex;flex-direction:column;gap:18px;align-items:flex-start;animation:fadeUp .3s ease-out">
+    <h1 style="margin:0;font-size:36px;font-weight:800;line-height:1.15">Your progress is saved.</h1>
+    <p style="margin:0;font-size:16px;line-height:1.6;color:rgba(255,255,255,0.86)">Return any time from this device, or sign in to continue elsewhere. You will pick up exactly where you left off.</p>
+    <div tabindex="0" onClick="{{ resume }}" style="padding:13px 24px;border-radius:999px;background:#BEFC00;color:#002336;font-weight:700;cursor:pointer">Resume now</div>
+  </section>
+</sc-if>
+
+</main>
+
+<footer style="padding:24px;text-align:center;font-size:12px;color:rgba(255,255,255,0.6);background:rgba(0,35,54,0.7)">ExitIQ is a structured self-assessment. It does not replace legal, tax or financial advice, and its results are not a valuation.</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showPrototypeTools&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const DOMS = {
+  S1: 'Objectives and scope', S2: 'Alignment and authority', S3: 'Options and future plan',
+  O1: 'Business economics and liquidity', O2: 'Revenue and supply resilience', O3: 'People and relationship continuity', O4: 'Systems and execution capacity', O5: 'Competitive proposition',
+  T1: 'Financial preparation', T2: 'Tax preparation', T3: 'Legal title and rights', T4: 'Process execution'
+};
+const DIMS = [{ k: 'S', name: 'Strategic clarity' }, { k: 'O', name: 'Operational transferability' }, { k: 'T', name: 'Transaction preparation' }];
+const W = {
+  OWNER: { S1: 35, S2: 35, S3: 30, O1: 25, O2: 20, O3: 25, O4: 15, O5: 15, T1: 25, T2: 25, T3: 25, T4: 25 },
+  CORPORATE: { S1: 30, S2: 35, S3: 35, O1: 25, O2: 15, O3: 25, O4: 25, O5: 10, T1: 20, T2: 25, T3: 25, T4: 30 },
+  PE: { S1: 30, S2: 30, S3: 40, O1: 30, O2: 20, O3: 20, O4: 15, O5: 15, T1: 25, T2: 20, T3: 25, T4: 30 },
+  VC: { S1: 25, S2: 40, S3: 35, O1: 20, O2: 20, O3: 20, O4: 20, O5: 20, T1: 20, T2: 20, T3: 35, T4: 25 }
+};
+// [id, domain, localWeight, route, name, question, a0, a50, a100, contributor]
+const QD = [
+  ['Q01','S1',2,'CORE','Transaction objectives','What should this transaction achieve for the relevant sellers or capital providers?','Objectives have not been articulated.','Objectives are described but priorities remain unresolved.','Prioritised objectives are documented.','Lead shareholder / sponsor'],
+  ['Q02','S1',1,'CORE','Timing and preparation','How clearly is the intended timetable linked to the preparation work still required?','No timetable or preparation sequence exists.','A timetable exists without a complete dependency review.','A timetable and preparation dependencies are documented.','Transaction lead'],
+  ['Q03','S2',3,'CORE','Stakeholder alignment','How far have the relevant decision makers agreed on the intended transaction objectives?','Material disagreement is unresolved.','Views have been collected; some differences remain open.','Objectives are agreed through the relevant governance process.','Lead shareholder / board'],
+  ['Q04','S2',2,'CORE','Decision authority','Are the approvals required to launch and complete the proposed transaction mapped?','Required approvals are not mapped.','Approval bodies are identified; process or timing is incomplete.','Required bodies, authority and decision timetable are documented.','Legal / board secretariat'],
+  ['Q05','S3',2,'CORE','Feasible transaction options','Have the realistic transaction options been compared against the stated objectives?','No comparison has been made.','Options are listed without a complete comparison.','Feasible options and their trade-offs are documented.','Transaction lead / adviser'],
+  ['Q06','S3',2,'CORE','Future management role','Has the intended post-transaction role of the current leadership been defined?','Expectations are unresolved.','An intended role exists; feasibility or succession remains open.','Roles and continuity requirements are documented and aligned.','Management / owners'],
+  ['Q07','O1',3,'CORE','Repeatable business economics','Can you explain the economics that would continue under normal operating conditions?','The underlying economics are not understood.','Key drivers are identified but the analysis is incomplete.','Repeatable earnings or growth-model unit economics are reconciled and explained.','CFO'],
+  ['Q08','O1',2,'CORE','Liquidity planning','Does your cash planning identify funding needs through the intended transaction period?','No usable cash forecast exists.','A forecast exists but funding scenarios are incomplete.','A maintained scenario forecast identifies needs and funded responses.','CFO'],
+  ['Q09','O2',3,'CORE','Customer exposure response','How prepared are you for the loss of a material customer?','Exposure and response are unassessed.','Exposure is quantified; the response is incomplete.','Exposure and a proportionate response are documented.','Commercial lead / CFO'],
+  ['Q10','O2',2,'CORE','Revenue durability','Can you demonstrate how existing customer revenue is retained or renewed?','Retention or repeat purchasing is not monitored.','Some retention or repeat-order data exists.','A reconciled history and relevant contract terms explain durability.','Commercial lead'],
+  ['Q11','O2',1,'CORE','Critical supply continuity','What would maintain delivery if a critical supplier stopped supplying?','Critical dependencies have no continuity response.','Alternatives or responses are identified but incomplete.','Dependencies and proportionate continuity arrangements are documented.','Operations'],
+  ['Q12','O3',3,'CORE','Decision continuity','Which decisions would wait during a four-week absence of a key decision maker?','Many routine decisions would wait.','Some material decisions would wait.','Material decisions continue within documented delegated authority.','CEO'],
+  ['Q13','O3',2,'CORE','Critical expertise cover','Who could cover essential work if a key expert were absent for an extended period?','Critical work has no cover.','Cover is identified but not sufficiently prepared.','Capable cover and essential knowledge transfer are in place.','Operations / people lead'],
+  ['Q14','O3',2,'CORE','Customer relationship continuity','How well are important customer relationships maintained beyond one individual?','Material relationships depend on one person without cover.','Additional contacts exist but ownership is incomplete.','Account ownership and relationship continuity are established.','Commercial lead'],
+  ['Q15','O4',2,'CORE','Repeatable core processes','Can someone new follow the documented steps for your essential operating processes?','Essential processes rely on undocumented personal knowledge.','Some essential processes are documented.','Essential processes have usable documentation and clear owners.','Operations'],
+  ['Q16','O4',2,'CORE','Capacity for growth','Have you assessed what would constrain a material increase in demand?','Constraints have not been assessed.','Main constraints are known without a complete response.','Capacity constraints and a resourced response are documented.','Operations / CFO'],
+  ['Q17','O4',2,'CORE','Technology continuity','How prepared are your essential systems for a prolonged outage?','No usable recovery arrangements exist.','Recovery arrangements exist but have material untested gaps.','Recovery arrangements are documented and appropriately tested.','IT / security'],
+  ['Q18','O4',2,'ACQUISITIONS','Acquisition integration','Are material dependencies from previous acquisitions under control?','Material integration dependencies lack an owned plan.','A plan exists with unresolved ownership or milestones.','Dependencies have owners, milestones and monitored progress.','Integration lead'],
+  ['Q19','O5',2,'CORE','Defensible differentiation','What evidence supports the reason customers choose your business?','The proposition is asserted without supporting evidence.','Some evidence supports the proposition.','Relevant customer, product or market evidence supports the proposition.','Commercial / product lead'],
+  ['Q20','O5',2,'CORE','Credible development roadmap','How prepared is the next material product or service development step?','No development priorities have been defined.','Priorities exist without an executable plan.','Priorities, resources, milestones and success measures are documented.','Product / strategy'],
+  ['Q21','T1',3,'CORE','Financial information package','Could you provide a consistent historical financial package for the proposed perimeter?','Key financial records are incomplete or inconsistent.','Most records exist; material reconciliations remain open.','Required periods and perimeter are reconciled and ready for review.','CFO'],
+  ['Q22','T1',2,'CORE','Forecast support','Can the financial forecast be traced to explicit operating assumptions?','The forecast cannot be traced to operating assumptions.','Main assumptions are documented with gaps.','Operating assumptions and financial consequences are traceable.','CFO'],
+  ['Q23','T1',2,'CORE','Enterprise to equity bridge','Are cash, debt and other potential purchase-price adjustments identified?','Potential adjustments are not mapped.','A preliminary mapping exists.','Adjustments and supporting balances are documented for review.','CFO / transaction adviser'],
+  ['Q24','T1',3,'DEBT','Financing releases','Is the route to required lender consents and security releases understood?','Required consents or releases are unassessed.','Requirements are identified without a complete execution plan.','Requirements, parties and execution timetable are documented.','CFO / legal'],
+  ['Q25','T2',1,'CORE','Tax workstream','Has a transaction-experienced tax adviser been engaged for the proposed transaction?','No adviser or responsible tax workstream is assigned.','An adviser is identified but scope is not agreed.','A responsible adviser and transaction scope are agreed.','Sellers / tax lead'],
+  ['Q26','T2',3,'CORE','Seller tax map','Is the legal and tax profile of the relevant sellers documented?','Relevant seller entities or jurisdictions are unmapped.','A preliminary seller map exists.','Relevant legal forms, tax jurisdictions and ownership chains are mapped.','Tax adviser'],
+  ['Q27','T2',3,'CORE','Transaction alternatives','Have tax consequences of feasible transaction structures been compared?','No transaction-specific comparison exists.','Initial analysis exists with material open assumptions.','A dated transaction-specific comparison records assumptions and open points.','Tax adviser'],
+  ['Q28','T2',3,'CORE','Historical tax restrictions','Have past reorganisations and transfers been reviewed for transaction-related restrictions?','Relevant history has not been reviewed.','History is collected; specialist assessment remains incomplete.','History and any applicable restrictions or deadlines have been reviewed.','Tax adviser'],
+  ['Q29','T2',2,'CORE','Tax exposure register','Are material unresolved tax matters identified for the proposed perimeter?','No reliable register exists.','Known matters are listed without complete assessment.','Material matters, including audit issues, have documented treatment and owners.','Tax adviser / CFO'],
+  ['Q30','T2',1,'CORE','Tax information availability','Can the relevant tax records be supplied for review?','Key records are missing.','Most records exist with unresolved gaps.','Required records are indexed with a response for any gaps.','CFO / tax adviser'],
+  ['Q31','T2',3,'CONTINGENT','Rollover and variable consideration','Have the tax implications of the proposed rollover or variable/deferred payments been reviewed?','No review exists.','A review is underway with material open points.','A transaction-specific review records assumptions, treatment and dependencies.','Sellers’ tax adviser'],
+  ['Q32','T3',3,'CORE','Legal ownership','Can legal ownership of the proposed sale interests be reconciled to the ownership records?','Ownership records or transfer chain have material unresolved gaps.','Records largely reconcile with open points.','Ownership and relevant transfer history reconcile.','Legal'],
+  ['Q33','T3',3,'CORE','Essential intellectual property','Can the company demonstrate its rights to the technology or other IP essential to its business?','Essential rights are undocumented or unresolved.','Key rights are documented with open assignment or licence issues.','Essential rights and material licence conditions are documented.','Legal / technology lead'],
+  ['Q34','T3',2,'CORE','Material contract change','Have material contract consequences of the proposed transaction been assessed?','Relevant contract consequences are unreviewed.','Key contracts are reviewed; material follow-up remains open.','Consequences and any required consents or responses are documented.','Legal / commercial'],
+  ['Q35','T3',2,'CORE','Disputes and claims','Are material actual or threatened disputes assessed for the proposed transaction?','No reliable assessment exists.','Known matters are recorded with material gaps.','Material matters and proportionate treatment are documented.','Legal'],
+  ['Q36','T3',2,'CORE','Data protection preparation','Are material data protection issues identified and assigned a response?','Material issues have not been assessed.','An assessment exists with incomplete responses.','Material issues and remediation responsibilities are documented.','Privacy / legal'],
+  ['Q37','T3',3,'REGULATED','Regulatory continuity','Has continuity of essential licences or approvals through the transaction been checked?','Continuity requirements are unreviewed.','Requirements are identified; execution remains incomplete.','Required approvals and continuity steps are documented.','Regulatory / legal'],
+  ['Q38','T3',3,'INVESTOR_RIGHTS','Investor distribution rights','Can the effects of investor preferences and other distribution rights be explained across exit scenarios?','Distribution rights are not mapped.','Rights are mapped; scenario outcomes remain incomplete.','Documented rights are reconciled to scenario outcomes, or absence is confirmed.','Legal / CFO'],
+  ['Q39','T3',2,'EMPLOYEE_EQUITY','Employee and management equity','Are employee or management participation rights prepared for the proposed transaction?','Plan rights or transaction consequences are unresolved.','Plans are mapped with outstanding treatment questions.','Rights and transaction treatment are documented for the relevant plans.','Legal / people / tax'],
+  ['Q40','T4',2,'CORE','Data room readiness','Can the team locate and organise the information needed for review?','Information is dispersed without an index or owners.','An index exists; material gaps lack a complete response.','A permissioned index, owners and gap plan are maintained.','Project manager'],
+  ['Q41','T4',2,'CORE','Process team','Who is accountable for the work and decisions needed during the transaction?','No responsible team is defined.','Key roles exist; capacity or decision rules remain open.','Roles, capacity, decision rules and milestones are agreed.','Transaction lead'],
+  ['Q42','T4',2,'CORE','Known issue resolution','How are identified preparation issues being resolved?','Material known issues have no tracked response.','A list exists without complete ownership or milestones.','An active issue log records owners, dependencies and milestones.','Transaction lead'],
+  ['Q43','T4',1,'CORE','Controlled disclosure','Is there an agreed plan for disclosing sensitive information during the process?','No disclosure plan exists.','Basic controls exist with material gaps.','A staged disclosure and access plan is approved.','Legal / transaction lead'],
+  ['Q44','S1',3,'SEPARATION','Sale perimeter','Is the exact business perimeter proposed for transfer documented?','Material perimeter boundaries are undefined.','A draft perimeter exists with open allocations.','Entities, assets, people and relevant obligations are mapped.','Corporate M&A / legal'],
+  ['Q45','T1',3,'SEPARATION','Standalone financials','Can financial performance of the proposed perimeter be shown separately from the remaining group?','Standalone performance is unavailable.','Carve-out figures exist with unresolved allocation adjustments.','Standalone figures and allocation assumptions are reconciled.','CFO / carve-out finance'],
+  ['Q46','O3',3,'SEPARATION','Shared service continuity','Is continuity of essential group-provided services planned for completion?','Essential dependencies lack a viable continuity response.','Dependencies are mapped; some continuity arrangements remain open.','Essential service continuity has an owned and executable plan.','Separation lead'],
+  ['Q47','O4',3,'SEPARATION','Systems separation','Is separation or continued lawful use of essential group systems executable?','Essential system separation or access is unplanned.','A plan exists with material gaps.','Rights, resources, sequence and service continuity are documented.','IT / legal'],
+  ['Q48','T4',3,'SEPARATION','Transition execution','Are transitional arrangements and their exit plans prepared?','Required transitional arrangements are unplanned.','Draft arrangements exist with material gaps.','Required service arrangements, accountabilities and exit plans are prepared.','Separation lead / legal'],
+  ['Q49','T2',3,'SEPARATION','Tax separation','Have tax consequences of leaving or transferring out of the group been reviewed?','No transaction-specific separation tax review exists.','Initial review exists with material unresolved scope.','Group-related tax consequences and dependencies are documented.','Tax adviser / group tax'],
+  ['Q50','S3',2,'PE_CONTEXT','Demonstrated value creation','Can improvements since the investor’s entry be separated from market movement and explained with evidence?','The improvement narrative is not supported.','Main initiatives are documented without a full performance bridge.','Initiatives and performance effects are reconciled with clear limitations.','Sponsor / CFO'],
+  ['Q51','T3',3,'CONVERTIBLE','Converting instruments','Are outstanding converting instruments mapped to transaction outcomes?','Instruments or conversion consequences are unresolved.','Instruments are mapped with open scenario treatment.','Terms, conversion scenarios and consents are reconciled.','Legal / CFO'],
+  ['Q52','T2',3,'CROSS_BORDER','Cross-border tax coordination','Are tax workstreams across the relevant jurisdictions coordinated?','Relevant jurisdictions lack coordinated coverage.','Advisers are identified; scope or dependencies remain open.','Jurisdictions, responsible advisers and dependencies are documented.','Lead tax adviser'],
+  ['Q53','T3',3,'ASSET_TRANSFER','Asset transfer execution','Are legal transfer requirements for the proposed assets or business mapped?','Material transfer requirements are unassessed.','Requirements are mapped with material gaps.','Assets, required transfers and relevant third-party steps are documented.','Legal'],
+  ['Q54','S2',3,'PARTIAL','Post-transaction governance','Are the governance rights after the proposed partial transaction understood and aligned?','Material future governance expectations conflict or are undefined.','A proposal exists with material open points.','Governance expectations and required negotiation points are aligned.','Shareholders / legal'],
+  ['Q55','T1',2,'PRIMARY_CAPITAL','Capital purpose and proceeds','Are primary capital needs distinguished from any proceeds paid to selling shareholders?','Company funding needs and seller liquidity are not distinguished.','An initial split exists without a fully linked funding plan.','Primary funding uses and any secondary proceeds are explicitly separated.','CFO / shareholders']
+];
+const Q = QD.map(r => ({ id: r[0], dom: r[1], u: r[2], route: r[3], name: r[4], title: r[5], a: [r[6], r[7], r[8]], who: r[9] }));
+const QM = Object.fromEntries(Q.map(q => [q.id, q]));
+const CHAPTERS = [
+  { title: 'What makes the business valuable', doms: ['O1', 'O5'] },
+  { title: 'How dependable the business is', doms: ['O2', 'O4'] },
+  { title: 'What transfers to a new owner', doms: ['O3'] },
+  { title: 'What supports the next stage', doms: ['S1', 'S3'] },
+  { title: 'What can be demonstrated', doms: ['T1', 'T2', 'T3'] },
+  { title: 'What the transaction should achieve', doms: ['S2', 'T4'] }
+];
+const ROUTE_LABEL = { DEBT: 'Debt and security', CONTINGENT: 'Rollover or earn-out', REGULATED: 'Regulated activity', INVESTOR_RIGHTS: 'Investor rights', EMPLOYEE_EQUITY: 'Employee equity', SEPARATION: 'Separation', PE_CONTEXT: 'PE value creation', CONVERTIBLE: 'Convertibles', CROSS_BORDER: 'Cross-border tax', ASSET_TRANSFER: 'Asset transfer', PARTIAL: 'Partial transaction', PRIMARY_CAPITAL: 'Primary capital', ACQUISITIONS: 'Acquisition integration' };
+const STATS = [['unknown', 'Unknown'], ['internal', 'Needs internal confirmation'], ['adviser', 'Needs adviser review'], ['withheld', 'Prefer not to answer'], ['na', 'Not applicable?']];
+const TRIGGERS = [['debt', 'External or shareholder debt, security or guarantees'], ['acq', 'Past acquisitions with ongoing integration work'], ['equity', 'Employee or management equity plans'], ['prefs', 'Investor preferences or special rights'], ['conv', 'Convertible notes or similar instruments'], ['reg', 'Business licences or regulatory approvals'], ['contingent', 'Earn-out, rollover or deferred payment under discussion'], ['xborder', 'Company and sellers in different tax jurisdictions'], ['group', 'Material services from a group that stays behind']];
+const PROFILES = [['OWNER', 'Owner or family-led exit', 'A private or family-owned business preparing a sale or succession.'], ['CORPORATE', 'Corporate disposal', 'An operating group selling a subsidiary or business unit.'], ['PE', 'Sponsor-led PE exit', 'A private equity investor preparing to exit its holding.'], ['VC', 'Venture-backed liquidity event', 'A venture-backed company preparing a sale or liquidity round.']];
+const DISC = [
+  { id: 'E01', theme: 'Strengths', type: 'multi', title: 'Which strength of your business would you show a potential buyer first?', help: 'Choose up to three. This is a preference and is not scored.', opts: ['Personal customer relationships', 'Specialist know-how', 'Recurring revenue', 'Strong brand or reputation', 'Proprietary technology', 'Experienced management team', 'Efficient operations'] },
+  { id: 'E02', theme: 'Strengths', type: 'q', q: 'Q19', title: 'Why do customers choose you when a competitor offers a lower price?', help: 'Pick the statement that describes the evidence you have today.' },
+  { id: 'E03', theme: 'Revenue', type: 'band', title: 'How much of your next 12 months of revenue is already contractually committed?', help: 'Optional. A rough band is enough. Not scored.', opts: ['Under 25%', '25 to 50%', '50 to 75%', 'Over 75%'] },
+  { id: 'E04', theme: 'Revenue', type: 'band', title: 'If your largest customer left, what share of annual revenue would be affected?', help: 'Optional. A rough band is enough. Not scored.', opts: ['Under 10%', '10 to 20%', '20 to 30%', 'Over 30%'] },
+  { id: 'E05', theme: 'People', type: 'q', q: 'Q12', title: '', help: 'Buyers look at whether the business keeps running without its current decision makers.' },
+  { id: 'E06', theme: 'People', type: 'q', q: 'Q13', title: 'A key expert is absent for an extended period. Who can cover the critical work?', help: 'Think of the one or two people whose absence would hurt most.' },
+  { id: 'E07', theme: 'Growth', type: 'band', title: 'If demand grew by 30%, what would reach its limit first?', help: 'The 30% is only an illustration. Not scored.', opts: ['Qualified people', 'Production or delivery capacity', 'Systems and IT', 'Management attention', 'Financing', 'Nothing material'] },
+  { id: 'E08', theme: 'Preparation', type: 'q', q: 'Q25', title: 'Has a transaction-experienced tax adviser been engaged to review a possible transaction?', help: 'A general tax adviser is not the same as transaction-specific analysis.' }
+];
+const KEY = 'exitiq-assessment-v1';
+const blank = () => ({ screen: 'c1', ctx: { role: null, tags: [], mgmt: null, objective: [], perimeter: null, horizon: null, profile: null, liquidity: null, trig: {} }, ans: {}, ev: {}, assigned: {}, diag: { E01: [] }, dIdx: 0, qIdx: 0, saved: null, taskFilter: 'all', allTasks: false });
+
+class Component extends DCLogic {
+  constructor(p) { super(p); let s = null; try { s = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {} this.state = { ...blank(), ...(s || {}) }; }
+  persist(patch) { this.setState(s => { const n = typeof patch === 'function' ? patch(s) : patch; const m = { ...s, ...n, saved: Date.now() }; try { localStorage.setItem(KEY, JSON.stringify(m)); } catch (e) {} return m; }); }
+  setCtx(k, v) { this.persist(s => ({ ctx: { ...s.ctx, [k]: v } })); }
+  toggleCtx(k, v) { this.persist(s => { const c = s.ctx[k]; return { ctx: { ...s.ctx, [k]: c.includes(v) ? c.filter(x => x !== v) : [...c, v] } }; }); }
+  cycleTrig(k) { this.persist(s => { const c = s.ctx.trig[k]; const n = c === 'yes' ? 'unsure' : c === 'unsure' ? undefined : 'yes'; return { ctx: { ...s.ctx, trig: { ...s.ctx.trig, [k]: n } } }; }); }
+  answer(id, val) { this.persist(s => ({ ans: { ...s.ans, [id]: val } })); }
+  go(screen, extra) { this.persist({ screen, ...(extra || {}) }); try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {} }
+
+  suggestProfile(c) { const t = c.tags; if (t.includes('Private equity')) return 'PE'; if (t.includes('Venture capital')) return 'VC'; if (t.includes('Corporate group') || c.perimeter === 'Subsidiary of a group') return 'CORPORATE'; return 'OWNER'; }
+
+  routes(c) {
+    const tr = k => c.trig[k] === 'yes' ? 'on' : c.trig[k] === 'unsure' ? 'pending' : 'off';
+    const or = (...xs) => xs.includes('on') ? 'on' : xs.includes('pending') ? 'pending' : 'off';
+    const b = x => x ? 'on' : 'off';
+    const pe = c.tags.includes('Private equity'), vc = c.tags.includes('Venture capital');
+    const growth = c.objective.includes('Growth capital');
+    return {
+      CORE: 'on', DEBT: tr('debt'), CONTINGENT: tr('contingent'), REGULATED: tr('reg'),
+      INVESTOR_RIGHTS: or(b(pe || vc), tr('prefs')), EMPLOYEE_EQUITY: tr('equity'),
+      SEPARATION: or(b(c.perimeter === 'Business unit or assets'), tr('group')), PE_CONTEXT: b(pe), CONVERTIBLE: tr('conv'),
+      CROSS_BORDER: tr('xborder'), ASSET_TRANSFER: b(c.perimeter === 'Business unit or assets'),
+      PARTIAL: b(c.objective.includes('Partial sale') || c.perimeter === 'Minority interest' || growth), PRIMARY_CAPITAL: b(growth), ACQUISITIONS: tr('acq')
+    };
+  }
+
+  qTitle(q, c) { if (q.id === 'Q12') return c.mgmt === 'Employed management' ? 'A key executive is unavailable for four weeks. Which decisions wait?' : 'You are unavailable for four weeks. Which decisions wait?'; return q.title; }
+
+  compute(S) {
+    const c = S.ctx, R = this.routes(c), prof = c.profile || this.suggestProfile(c), w = W[prof];
+    const app = Q.filter(q => R[q.route] !== 'off');
+    const isSub = a => a && a.s === 'sub';
+    const dims = DIMS.map(D => {
+      let cov = 0, num = 0, den = 0, L = 0, out = 0, ev = 0, okDomains = true, open = 0;
+      const domains = Object.keys(DOMS).filter(d => d[0] === D.k).map(d => {
+        const A = app.filter(q => q.dom === d), su = A.reduce((t, q) => t + q.u, 0);
+        let kU = 0, kNum = 0, kDen = 0;
+        A.forEach(q => { const e = w[d] * q.u / su, a = S.ans[q.id]; if (isSub(a)) { cov += e; num += e * a.v; den += e; L += e * a.v / 100; kU += q.u; kNum += q.u * a.v; kDen += q.u; ev += e * (S.ev[q.id] || 0); } else { out += e; open++; } });
+        const lc = su ? kU / su : 1; if (lc < 0.5) okDomains = false;
+        return { name: DOMS[d], idx: kDen ? kNum / kDen : null, lc };
+      });
+      const C = cov / 100, Ridx = den ? num / den : null, U = L + out;
+      const pend = app.some(q => q.dom[0] === D.k && R[q.route] === 'pending');
+      let status, index = '', range = '';
+      if (C >= 0.8 && okDomains && Ridx != null) {
+        index = String(Math.round(Ridx));
+        if (C >= 0.999 && !pend && c.profile) { status = 'Complete'; range = 'All applicable questions answered'; }
+        else { status = 'Indicative, incomplete'; range = 'Range ' + Math.round(L) + ' to ' + Math.round(U) + (pend ? ' · applicability pending' : ''); }
+      } else { status = 'Insufficient coverage'; index = 'Not shown'; range = open + ' questions open. Reach 80% coverage to see an index.'; }
+      return { name: D.name, k: D.k, C, ev: ev / 100, status, index, range, domains };
+    });
+    return { R, prof, app, dims, w };
+  }
+
+  deepList(S) { const { app } = this.compute(S); const out = []; CHAPTERS.forEach((ch, ci) => ch.doms.forEach(d => app.filter(q => q.dom === d).forEach(q => out.push({ q, ci })))); return out; }
+
+  sel(on) { return { border: on ? '#00C3BF' : 'rgba(255,255,255,0.16)', bg: on ? 'rgba(0,195,191,0.16)' : 'rgba(255,255,255,0.05)', ring: on ? '#00C3BF' : 'rgba(255,255,255,0.34)', fill: on ? '#00C3BF' : 'transparent' }; }
+  chip(on) { return { border: on ? '#00C3BF' : 'rgba(255,255,255,0.32)', bg: on ? 'rgba(0,195,191,0.18)' : 'transparent' }; }
+
+  ctxScreen(S) {
+    const c = S.ctx;
+    const single = (k, list, min) => ({ min: min || '200px', opts: list.map(x => { const [v, sub, tag] = Array.isArray(x) ? x : [x, '', '']; const on = c[k] === v; return { label: v, sub, tag, tagColor: '#BEFC00', role: 'radio', checked: on ? 'true' : 'false', radius: '50%', mark: '', ...this.sel(on), pick: () => this.setCtx(k, v) }; }) });
+    const multi = (k, list, min) => ({ min: min || '200px', opts: list.map(v => { const on = c[k].includes(v); return { label: v, sub: '', tag: '', role: 'checkbox', checked: on ? 'true' : 'false', radius: '5px', mark: on ? '✓' : '', ...this.sel(on), pick: () => this.toggleCtx(k, v) }; }) });
+    if (S.screen === 'c1') return { kicker: 'Context · 1 of 3', title: 'Tell us about you and the business.', sub: 'These answers are not scored. They decide which questions apply to you and how they are worded.', ok: c.role && c.tags.length && c.mgmt,
+      fields: [
+        { label: 'Which best describes your role?', why: 'Used to phrase questions. It does not change access rights or scoring.', ...single('role', ['Owner or shareholder', 'Management', 'CFO or finance', 'Corporate M&A', 'Investor', 'Adviser', 'Other']) },
+        { label: 'Who owns the business today?', why: 'Select all that apply. Mixed ownership is common and fully supported.', ...multi('tags', ['Private or family', 'Corporate group', 'Private equity', 'Venture capital', 'Other', 'Not sure']) },
+        { label: 'Who runs the business day to day?', why: 'Changes the wording of some questions, for example who would be absent.', ...single('mgmt', ['Owner-led', 'Employed management', 'Mixed', 'Not sure']) }
+      ] };
+    if (S.screen === 'c2') { const sug = this.suggestProfile(c); return { kicker: 'Context · 2 of 3', title: 'What kind of transaction are you preparing?', sub: 'Timing changes the urgency of tasks, never the readiness result.', ok: c.objective.length && c.perimeter && c.horizon && c.profile,
+      fields: [
+        { label: 'What should the transaction achieve?', why: 'Select all that apply. Exploring options is a valid objective and is not penalised.', ...multi('objective', ['Full sale', 'Partial sale', 'Succession', 'Growth capital', 'Exploring options', 'IPO', 'Distress or restructuring']) },
+        { label: 'What would be transferred?', why: 'The perimeter decides whether separation and asset transfer questions apply.', ...single('perimeter', ['Whole standalone business', 'Subsidiary of a group', 'Business unit or assets', 'Minority interest', 'Undecided']) },
+        { label: 'When could a transaction start?', why: 'Used to order your tasks.', ...single('horizon', ['Under 6 months', '6 to 18 months', '19 to 36 months', 'Over 36 months', 'Undecided'], '160px') },
+        { label: 'Which perspective best describes the transaction you are preparing?', why: 'This sets how the areas are weighted. We suggest one from your answers. You confirm it, and you can change it later.', ...single('profile', PROFILES.map(p => [p[0], p[2], p[0] === sug ? 'Suggested' : '']), '280px') }
+      ].map(f => f.label.startsWith('Which perspective') ? { ...f, opts: f.opts.map((o, i) => ({ ...o, label: PROFILES[i][1] })) } : f) }; }
+    const trig = { label: 'Do any of these apply?', why: 'Click once for yes, twice for not sure. Not sure keeps the related questions open until clarified, so nothing is hidden by accident.', min: '280px', opts: TRIGGERS.map(([k, l]) => { const st = c.trig[k]; return { label: l, sub: '', tag: st === 'yes' ? 'Yes' : st === 'unsure' ? 'Not sure' : '', tagColor: st === 'yes' ? '#BEFC00' : '#DFFE00', role: 'checkbox', checked: st ? 'true' : 'false', radius: '5px', mark: st === 'yes' ? '✓' : st === 'unsure' ? '?' : '', ...this.sel(!!st), pick: () => this.cycleTrig(k) }; }) };
+    return { kicker: 'Context · 3 of 3', title: 'A few specialist topics.', sub: 'Each one switches on a short set of extra questions only if it applies.', ok: !!c.liquidity,
+      fields: [
+        { label: 'Are there known or expected difficulties meeting payment obligations during the next six months?', why: 'Not scored. It decides whether a specialist route should come first. ExitIQ does not diagnose insolvency.', ...single('liquidity', ['No known pressure', 'Potential pressure requiring review', 'Confirmed acute pressure', 'Unknown'], '220px') },
+        trig
+      ] };
+  }
+
+  observations(S) {
+    const a = S.ans, d = S.diag, out = [];
+    const v = id => a[id] && a[id].s === 'sub' ? a[id].v : null;
+    const rel = (d.E01 || []).includes('Personal customer relationships');
+    if (rel && v('Q12') != null && v('Q12') < 100) out.push({ tag: 'Continuity', color: '#BEFC00', text: 'You identified personal customer relationships as a strength. Your continuity answers suggest checking how these relationships can be maintained after a change of ownership.' });
+    else if ((d.E01 || []).length) out.push({ tag: 'Strengths', color: '#00C3BF', text: 'You would lead with ' + d.E01.slice(0, 2).map(x => x.toLowerCase()).join(' and ') + '. The detailed assessment asks what evidence supports this.' });
+    if (v('Q12') === 100 && v('Q13') === 100) out.push({ tag: 'Leadership', color: '#00C3BF', text: 'Material decisions and critical expertise are covered during an absence. That supports transferability of leadership.' });
+    else if (v('Q13') === 0) out.push({ tag: 'Expertise', color: '#BEFC00', text: 'Critical work currently has no cover. Buyers will ask how essential knowledge is shared.' });
+    if (d.E04 === 'Over 30%') out.push({ tag: 'Customers', color: '#BEFC00', text: 'Your largest customer accounts for more than 30% of revenue. The share alone is not a verdict. The detailed assessment looks at how the exposure is managed.' });
+    if (v('Q25') === 0 && out.length < 3) out.push({ tag: 'Tax', color: '#BEFC00', text: 'No transaction tax workstream is assigned yet. Tax preparation often sets the timetable, so this is worth starting early.' });
+    if (v('Q19') === 100 && out.length < 3) out.push({ tag: 'Proposition', color: '#00C3BF', text: 'You can support why customers choose you with evidence. That is a strong basis for the equity story.' });
+    if (!out.length) out.push({ tag: 'More detail needed', color: '#98A6AE', text: 'Your answers do not yet support an observation. The detailed assessment can fill this in.' });
+    return out.slice(0, 3);
+  }
+
+  demoFill() {
+    this.setState(s0 => {
+      const c = s0.ctx.role ? s0.ctx : { role: 'Owner or shareholder', tags: ['Private or family'], mgmt: 'Owner-led', objective: ['Full sale'], perimeter: 'Whole standalone business', horizon: 'Under 6 months', profile: 'OWNER', liquidity: 'No known pressure', trig: { debt: 'yes', equity: 'unsure' } };
+      const S = { ...s0, ctx: c };
+      const pat = [100, 50, 100, 50, 0, 100, 50, 'unknown', 100, 50, 100, 'adviser'];
+      const ans = { ...S.ans }, ev = { ...S.ev };
+      this.compute(S).app.forEach((q, i) => { if (ans[q.id]) return; const p = pat[i % pat.length]; ans[q.id] = typeof p === 'number' ? { s: 'sub', v: p } : { s: p }; if (typeof p === 'number' && i % 3 === 0) ev[q.id] = 0.5; });
+      ans.Q04 = { s: 'sub', v: 0 };
+      const m = { ...S, ans, ev, diag: { E01: ['Personal customer relationships', 'Specialist know-how'], E03: '25 to 50%', E04: 'Over 30%', E07: 'Qualified people' }, screen: 'result', saved: Date.now() };
+      try { localStorage.setItem(KEY, JSON.stringify(m)); } catch (e) {}
+      return m;
+    });
+  }
+
+  renderVals() {
+    const S = this.state, c = S.ctx, scr = S.screen;
+    const comp = this.compute(S), R = comp.R;
+    const order = ['c1', 'c2', 'c3', 'summary', 'discovery', 'picture', 'deep', 'result'];
+    const phase = scr === 'saved' ? -1 : ['c1', 'c2', 'c3', 'summary'].includes(scr) ? 0 : scr === 'discovery' ? 1 : scr === 'picture' ? 2 : scr === 'deep' ? 3 : 4;
+    const stepper = ['Context', 'Discovery', 'Initial picture', 'Assessment', 'Action plan'].map((l, i) => ({ label: l, mark: i < phase ? '✓' : String(i + 1), bg: i === phase ? 'rgba(0,195,191,0.18)' : 'transparent', fg: i <= phase ? '#FFFFFF' : 'rgba(255,255,255,0.6)', border: i === phase ? '#00C3BF' : 'rgba(255,255,255,0.12)', dotBg: i < phase ? '#00C3BF' : i === phase ? '#FFFFFF' : 'rgba(255,255,255,0.16)', dotFg: i <= phase ? '#002336' : '#FFFFFF' }));
+    const savedLabel = S.saved ? 'Saved ' + new Date(S.saved).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Saves after every answer';
+    const out = { stepper, savedLabel, showDemo: this.props.showPrototypeTools ?? true, screen: scr,
+      isContext: ['c1', 'c2', 'c3'].includes(scr), isSummary: scr === 'summary', isDiscovery: scr === 'discovery', isPicture: scr === 'picture', isDeep: scr === 'deep', isResult: scr === 'result', isSaved: scr === 'saved',
+      saveExit: () => this.go('saved', { resumeTo: scr === 'saved' ? S.resumeTo : scr }), resume: () => this.go(S.resumeTo || 'c1'),
+      demoFill: () => this.demoFill(), reset: () => { try { localStorage.removeItem(KEY); } catch (e) {} this.setState(blank()); },
+      jumps: [['Context', 'c1'], ['Summary', 'summary'], ['Discovery', 'discovery'], ['Initial picture', 'picture'], ['Assessment', 'deep'], ['Action plan', 'result']].map(([label, s]) => ({ label, pick: () => this.go(s) })),
+      startDiscovery: () => this.go('discovery', { dIdx: 0 }), startDeep: () => this.go('deep'), goResult: () => this.go('result') };
+
+    if (out.isContext) {
+      const x = this.ctxScreen(S), i = order.indexOf(scr);
+      out.ctx = { ...x, back: () => i > 0 && this.go(order[i - 1]), backOpacity: i === 0 ? 0.4 : 1, next: () => x.ok && this.go(order[i + 1]), nextBg: x.ok ? '#BEFC00' : 'rgba(255,255,255,0.3)', nextLabel: scr === 'c3' ? 'Review setup' : 'Continue', hint: x.ok ? '' : 'Answer each question to continue' };
+    }
+
+    const active = Object.keys(R).filter(k => k !== 'CORE' && R[k] === 'on'), pending = Object.keys(R).filter(k => R[k] === 'pending');
+    const appN = comp.app.length, reused = ['Q12', 'Q13', 'Q19', 'Q25'].length;
+    if (out.isSummary) {
+      const chipOn = l => ({ label: l, bg: '#003E5F', fg: '#FFFFFF', border: '#003E5F' }), chipPend = l => ({ label: l + ' · not sure', bg: '#FFFFFF', fg: '#002336', border: '#98A6AE' });
+      const profName = c.profile ? PROFILES.find(p => p[0] === c.profile)[1] : 'Not confirmed';
+      out.summaryRows = [
+        { label: 'Perspective', value: profName, chips: (c.tags || []).map(t => ({ label: t, bg: '#F2F3F4', fg: '#002336', border: '#CBD2D6' })), edit: () => this.go('c2') },
+        { label: 'Transaction', value: (c.objective || []).join(', ') || 'Not set', chips: [], edit: () => this.go('c2') },
+        { label: 'Perimeter and timing', value: (c.perimeter || 'Not set') + ' · ' + (c.horizon || 'No horizon'), chips: [], edit: () => this.go('c2') },
+        { label: 'Active modules', value: active.length ? active.length + ' added to the core questions' : 'Core questions only', chips: active.map(k => chipOn(ROUTE_LABEL[k])), edit: () => this.go('c3') },
+        { label: 'Unresolved', value: pending.length ? 'These stay open until clarified' : 'None', chips: pending.map(k => chipPend(ROUTE_LABEL[k])), edit: () => this.go('c3') }
+      ];
+      out.countLabel = appN + ' questions apply to you';
+      out.countSub = 'Eight discovery questions come first, four of which are reused later. ' + (pending.length ? 'Questions for unresolved topics are included until you clarify them.' : 'If a later answer adds questions, we tell you which ones and why.');
+    }
+    const banners = [];
+    if (c.liquidity === 'Confirmed acute pressure') banners.push({ tag: 'Specialist route', text: 'You confirmed acute payment pressure. We will keep your progress and show preparatory observations, but a standard readiness conclusion is withheld. Please obtain a qualified assessment first.', border: '#F34832', bg: 'rgba(243,72,50,0.12)', tagBg: '#F34832', tagFg: '#FFFFFF' });
+    else if (c.liquidity === 'Potential pressure requiring review' || c.liquidity === 'Unknown') banners.push({ tag: 'Review task', text: 'Liquidity over the next six months needs a review. A task has been added to your action plan.', border: 'rgba(223,254,0,0.5)', bg: 'rgba(223,254,0,0.08)', tagBg: '#DFFE00', tagFg: '#002336' });
+    if ((c.objective || []).some(o => o === 'IPO' || o === 'Distress or restructuring')) banners.push({ tag: 'Specialist route', text: 'IPO and distress situations need a specialist route. Your progress is kept and relevant preparation is shown, without a standard readiness conclusion.', border: 'rgba(223,254,0,0.5)', bg: 'rgba(223,254,0,0.08)', tagBg: '#DFFE00', tagFg: '#002336' });
+    if (!c.profile) banners.push({ tag: 'Scoring pending', text: 'Confirm a perspective to enable scoring. Discovery works without it.', border: 'rgba(255,255,255,0.3)', bg: 'rgba(255,255,255,0.06)', tagBg: '#FFFFFF', tagFg: '#002336' });
+    out.banners = banners;
+
+    if (out.isDiscovery) {
+      const i = Math.min(S.dIdx, 7), D = DISC[i];
+      const nextFn = () => i < 7 ? this.go('discovery', { dIdx: i + 1 }) : this.go('picture');
+      let title = D.title, opts = [], stats = [], answered = false, role = 'radiogroup';
+      if (D.type === 'q') {
+        const q = QM[D.q], a = S.ans[q.id]; title = D.id === 'E05' ? this.qTitle(q, c) : D.title;
+        opts = q.a.map((t, j) => { const on = a && a.s === 'sub' && a.v === j * 50; return { label: t, role: 'radio', checked: on ? 'true' : 'false', radius: '50%', mark: '', ...this.sel(on), pick: () => this.answer(q.id, { s: 'sub', v: j * 50 }) }; });
+        stats = STATS.slice(0, 3).map(([k, l]) => ({ label: l, ...this.chip(a && a.s === k), pick: () => this.answer(q.id, { s: k }) }));
+        answered = !!a;
+      } else if (D.type === 'multi') {
+        role = 'group'; const cur = S.diag.E01 || [];
+        opts = D.opts.map(l => { const on = cur.includes(l); return { label: l, role: 'checkbox', checked: on ? 'true' : 'false', radius: '5px', mark: on ? '✓' : '', ...this.sel(on), pick: () => this.persist(s => { const c0 = s.diag.E01 || []; const n = c0.includes(l) ? c0.filter(x => x !== l) : c0.length >= 3 ? c0 : [...c0, l]; return { diag: { ...s.diag, E01: n } }; }) }; });
+        answered = cur.length > 0;
+      } else {
+        const cur = S.diag[D.id];
+        opts = D.opts.map(l => { const on = cur === l; return { label: l, role: 'radio', checked: on ? 'true' : 'false', radius: '50%', mark: '', ...this.sel(on), pick: () => this.persist(s => ({ diag: { ...s.diag, [D.id]: l } })) }; });
+        stats = [['Unknown', 'Unknown'], ['Prefer not to answer', 'Prefer not to answer']].map(([k, l]) => ({ label: l, ...this.chip(cur === k), pick: () => this.persist(s => ({ diag: { ...s.diag, [D.id]: k } })) }));
+        answered = !!cur;
+      }
+      out.disc = { key: 'd' + i, theme: D.theme, progress: 'Question ' + (i + 1) + ' of 8', title, help: D.help, role, opts, stats, reuse: D.type === 'q',
+        dots: DISC.map((_, j) => ({ bg: j < i ? '#00C3BF' : j === i ? '#FFFFFF' : 'rgba(255,255,255,0.16)' })),
+        back: () => i > 0 ? this.go('discovery', { dIdx: i - 1 }) : this.go('summary'), skip: nextFn, next: () => answered && nextFn(),
+        nextBg: answered ? '#BEFC00' : 'rgba(255,255,255,0.3)', nextLabel: i === 7 ? 'See initial picture' : 'Next' };
+    }
+
+    if (out.isPicture) {
+      out.observations = this.observations(S);
+      out.gaps = ['Financial preparation', 'Legal title and rights', 'Process execution'].concat(active.length ? [active.map(k => ROUTE_LABEL[k]).slice(0, 2).join(' and ')] : []);
+      const left = comp.app.filter(q => !S.ans[q.id]).length;
+      out.deepCountLabel = left + ' questions remain, grouped into six chapters.';
+    }
+
+    const list = this.deepList(S);
+    if (out.isDeep && list.length) {
+      const qi = Math.min(S.qIdx, list.length - 1), { q, ci } = list[qi], a = S.ans[q.id];
+      const answeredN = list.filter(x => S.ans[x.q.id]).length;
+      out.chapters = CHAPTERS.map((ch, j) => { const items = list.filter(x => x.ci === j), done = items.filter(x => S.ans[x.q.id]).length, on = j === ci; return { title: ch.title, count: done + ' of ' + items.length, w: (items.length ? done / items.length * 100 : 0) + '%', border: on ? '#00C3BF' : 'rgba(255,255,255,0.14)', bg: on ? 'rgba(0,195,191,0.14)' : 'rgba(0,35,54,0.45)', pick: () => { const f = list.findIndex(x => x.ci === j && !S.ans[x.q.id]); const g = f >= 0 ? f : list.findIndex(x => x.ci === j); if (g >= 0) this.persist({ qIdx: g }); } }; });
+      out.deepOverall = answeredN + ' of ' + list.length + ' questions answered. You can open the action plan at any time.';
+      const theme = list.filter(x => x.q.dom === q.dom), tDone = theme.filter(x => S.ans[x.q.id]).length;
+      const chItems = list.map((x, k) => ({ x, k })).filter(o => o.x.ci === ci);
+      const on = S.assigned[q.id], isSub = a && a.s === 'sub', evv = S.ev[q.id] || 0;
+      out.dq = { key: q.id, chapter: 'Chapter ' + (ci + 1) + ' of 6 · ' + CHAPTERS[ci].title, themeProgress: DOMS[q.dom] + ': ' + tDone + ' of ' + theme.length + ' questions', idLabel: q.id + (q.route !== 'CORE' ? ' · ' + ROUTE_LABEL[q.route] : ''),
+        pending: R[q.route] === 'pending', name: q.name, title: this.qTitle(q, c),
+        opts: q.a.map((t, j) => { const o = isSub && a.v === j * 50; return { label: t, checked: o ? 'true' : 'false', ...this.sel(o), pick: () => this.answer(q.id, { s: 'sub', v: j * 50 }) }; }),
+        stats: STATS.map(([k, l]) => ({ label: l, ...this.chip(a && a.s === k), pick: () => this.answer(q.id, { s: k }) })),
+        contributor: q.who, assign: () => this.persist(s => ({ assigned: { ...s.assigned, [q.id]: !s.assigned[q.id] } })),
+        assignLabel: on ? 'Assigned · link sent to ' + q.who.split(' /')[0] : 'Ask a colleague', assignBorder: on ? '#00C3BF' : 'rgba(255,255,255,0.3)', assignBg: on ? 'rgba(0,195,191,0.18)' : 'transparent',
+        showEvidence: !!isSub, evOpts: [[0, 'Self-assessment only'], [0.5, 'Dated document with named owner']].map(([v, l]) => ({ label: l, border: evv === v ? '#BEFC00' : 'rgba(255,255,255,0.3)', bg: evv === v ? 'rgba(190,252,0,0.14)' : 'transparent', pick: () => this.persist(s => ({ ev: { ...s.ev, [q.id]: v } })) })),
+        mini: chItems.map(o => { const aa = S.ans[o.x.q.id]; return { title: o.x.q.id + ' ' + o.x.q.name, bg: !aa ? 'rgba(255,255,255,0.18)' : aa.s === 'sub' ? '#00C3BF' : '#DFFE00', outline: o.k === qi ? '2px solid #FFFFFF' : 'none', pick: () => this.persist({ qIdx: o.k }) }; }),
+        prev: () => qi > 0 && this.persist({ qIdx: qi - 1 }), prevOpacity: qi === 0 ? 0.4 : 1,
+        next: () => qi < list.length - 1 ? this.persist({ qIdx: qi + 1 }) : this.go('result'), nextLabel: qi < list.length - 1 ? 'Next question' : 'See action plan' };
+    }
+
+    if (out.isResult) {
+      const isSubA = id => S.ans[id] && S.ans[id].s === 'sub';
+      out.dateLabel = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      const complete = comp.dims.every(d => d.status === 'Complete');
+      out.resultHeadline = complete ? 'Your assessment is complete. Here is where preparation stands.' : 'Here is where preparation stands, and what is still open.';
+      out.ctxChips = [PROFILES.find(p => p[0] === comp.prof)[1] + (c.profile ? '' : ' (not confirmed)'), (c.objective || []).join(', ') || 'Objective not set', c.perimeter || 'Perimeter not set', c.horizon || 'No horizon'].concat(active.map(k => ROUTE_LABEL[k]));
+      out.profileNote = 'Weighted for ' + PROFILES.find(p => p[0] === comp.prof)[1].toLowerCase() + ' · Model v1, proposed parameters';
+      out.dims = comp.dims.map(d => { const st = d.status; return { ...d, statusBg: st === 'Complete' ? '#003E5F' : st === 'Insufficient coverage' ? '#F2F3F4' : 'rgba(0,195,191,0.16)', statusFg: st === 'Complete' ? '#BEFC00' : st === 'Insufficient coverage' ? '#324E5E' : '#007775', indexColor: st === 'Insufficient coverage' ? '#98A6AE' : '#002336',
+        covLabel: 'Answer coverage ' + Math.round(d.C * 100) + '%', evLabel: 'Evidence support ' + Math.round(d.ev * 100) + '%', covW: d.C * 100 + '%', evW: d.ev * 100 + '%',
+        domains: d.domains.map(m => ({ name: m.name, label: m.idx == null ? 'Open' : Math.round(m.idx) + (m.lc < 1 ? ' · ' + Math.round(m.lc * 100) + '% answered' : ''), w: (m.idx == null ? 0 : m.idx * m.lc) + '%', openW: (100 - m.lc * 100) + '%', color: '#003E5F' })) }; });
+
+      const crit = t => ({ tag: 'Critical', text: t, border: '#F34832', bg: '#F34832', fg: '#FFFFFF' }), rev = t => ({ tag: 'Needs review', text: t, border: '#CBD2D6', bg: '#F2F3F4', fg: '#002336' });
+      const risks = [], v = id => isSubA(id) ? S.ans[id].v : null;
+      if (c.liquidity === 'Confirmed acute pressure') risks.push(crit('Confirmed acute payment pressure. Specialist route; no standard transaction-ready conclusion.'));
+      if (v('Q04') === 0 && c.horizon === 'Under 6 months') risks.push(crit('Required approvals are not mapped, but a launch is planned within six months. Name the approval and its owner.'));
+      if (v('Q33') === 0 || v('Q32') === 0) risks.push(crit('Essential ownership or IP rights are undocumented or unresolved. Critical legal review.'));
+      if (R.SEPARATION === 'on' && v('Q46') === 0) risks.push(crit('Essential group services lack a viable continuity plan at completion.'));
+      if (c.liquidity === 'Potential pressure requiring review' || c.liquidity === 'Unknown') risks.push(rev('Liquidity over the next six months needs a review.'));
+      pending.forEach(k => risks.push(rev('Applicability unresolved: ' + ROUTE_LABEL[k] + '. Clarify whether this applies.')));
+      if (!risks.length) risks.push({ tag: 'No critical items', text: 'No critical prerequisites based on your answers. This does not replace specialist review.', border: '#CBD2D6', bg: '#003E5F', fg: '#BEFC00' });
+      out.risks = risks;
+
+      const e = q => comp.w[q.dom] * q.u / comp.app.filter(x => x.dom === q.dom).reduce((t, x) => t + x.u, 0);
+      out.strengths = comp.app.filter(q => v(q.id) === 100).sort((x, y) => e(y) - e(x)).slice(0, 3).map(q => ({ id: q.id, name: q.name, text: q.a[2] }));
+      if (!out.strengths.length) out.strengths = [{ id: 'Q', name: 'None yet', text: 'Strengths appear here once answers support them.' }];
+
+      const tasks = [];
+      risks.filter(r => r.tag === 'Critical').forEach(r => tasks.push({ cls: 1, tag: 'Critical', bg: '#F34832', fg: '#FFFFFF', title: r.text.split('.')[0], reason: r.text, meta: 'Prerequisite · resolve before launch', imp: 999, qid: null, kind: 'critical' }));
+      comp.app.forEach((q, k) => { const a = S.ans[q.id], dim = DIMS.find(d => d.k === q.dom[0]).name; const meta = dim + ' · ' + DOMS[q.dom] + ' · Suggested: ' + q.who + ' · ' + q.id;
+        if (!a) tasks.push({ cls: 2, tag: 'Unanswered', bg: '#F2F3F4', fg: '#324E5E', title: q.name, reason: 'Not answered yet.', meta, imp: e(q), qid: q.id, kind: 'open' });
+        else if (a.s !== 'sub') tasks.push({ cls: 2, tag: a.s === 'adviser' ? 'Adviser review' : 'Confirm', bg: '#DFFE00', fg: '#002336', title: q.name, reason: 'Marked as ' + STATS.find(x => x[0] === a.s)[1].toLowerCase() + '. Confirm to include it in coverage.', meta, imp: e(q), qid: q.id, kind: 'open' });
+        else if (a.v < 100) tasks.push({ cls: 3, tag: a.v === 0 ? 'Gap' : 'Partial', bg: '#003E5F', fg: '#FFFFFF', title: q.name, reason: 'Today: ' + q.a[a.v / 50] + ' Target: ' + q.a[2], meta, imp: e(q) * (100 - a.v) / 100, qid: q.id, kind: 'gap' });
+      });
+      tasks.sort((x, y) => x.cls - y.cls || y.imp - x.imp);
+      const f = S.taskFilter, ft = tasks.filter(t => f === 'all' || t.kind === f);
+      out.taskFilters = [['all', 'All · ' + tasks.length], ['critical', 'Critical · ' + tasks.filter(t => t.kind === 'critical').length], ['open', 'Open facts · ' + tasks.filter(t => t.kind === 'open').length], ['gap', 'Preparation · ' + tasks.filter(t => t.kind === 'gap').length]].map(([k, l]) => ({ label: l, bg: f === k ? '#003E5F' : '#FFFFFF', fg: f === k ? '#FFFFFF' : '#003E5F', pick: () => this.persist({ taskFilter: k, allTasks: false }) }));
+      out.tasks = (S.allTasks ? ft : ft.slice(0, 8)).map(t => ({ ...t, action: t.qid ? 'Open question' : '', open: () => { if (!t.qid) return; const idx = list.findIndex(x => x.q.id === t.qid); this.go('deep', { qIdx: Math.max(0, idx) }); } }));
+      out.tasksMoreLabel = ft.length <= 8 ? 'All ' + ft.length + ' items shown' : S.allTasks ? 'Show fewer' : 'Show all ' + ft.length + ' items';
+      out.toggleAllTasks = () => this.persist(s => ({ allTasks: !s.allTasks }));
+      out.taxRows = comp.app.filter(q => q.dom === 'T2').map(q => { const a = S.ans[q.id]; return { name: q.name, status: !a ? 'Open' : a.s !== 'sub' ? 'Needs review' : a.v === 100 ? 'Prepared' : a.v === 50 ? 'In progress' : 'Not started', color: !a || a.s !== 'sub' ? '#DFFE00' : a.v === 100 ? '#BEFC00' : '#FFFFFF' }; });
+    }
+    return out;
+  }
+}
+</script>
+</body>
+</html>

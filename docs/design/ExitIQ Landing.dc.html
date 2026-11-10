@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>ExitIQ by atares M&amp;A</title>
+<style>
+body{margin:0;background:#FFFFFF;font-family:Aptos,"Arial Nova",Arial,sans-serif;color:#003E5F;-webkit-font-smoothing:antialiased}
+a{color:#007775;text-decoration:none}
+a:hover{color:#003E5F;text-decoration:underline}
+*{box-sizing:border-box}
+</style>
+</helmet>
+
+<header data-screen-label="Header" style="position:sticky;top:0;z-index:10;background:#002336;border-bottom:1px solid rgba(255,255,255,0.08)">
+  <div style="max-width:1200px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+    <div style="display:flex;align-items:baseline;gap:10px">
+      <span style="font-size:22px;font-weight:700;color:#FFFFFF;letter-spacing:-0.01em">Exit<span style="color:#00C3BF">IQ</span></span>
+      <span style="font-size:13px;color:#98A6AE">by atares M&amp;A</span>
+    </div>
+    <nav style="display:flex;align-items:center;gap:12px 24px;flex-wrap:wrap;font-size:14px;white-space:nowrap">
+      <a href="#how" style="color:#FFFFFF">How it works</a>
+      <a href="#report" style="color:#FFFFFF">Your report</a>
+      <a href="#context" style="color:#FFFFFF">Ownership contexts</a>
+      <div style="display:flex;gap:4px;font-size:13px">
+        <span style="color:#FFFFFF;font-weight:700">EN</span><span style="color:#98A6AE">/</span><a href="#" style="color:#98A6AE">DE</a>
+      </div>
+      <a href="#" style="color:#002336;background:#00C3BF;padding:9px 16px;border-radius:4px;font-weight:700;white-space:nowrap;flex:none;display:inline-flex">Resume assessment</a>
+    </nav>
+  </div>
+</header>
+
+<section data-screen-label="Hero" style="background:#002336;color:#FFFFFF">
+  <div style="max-width:1200px;margin:0 auto;padding:88px 24px 96px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:64px;align-items:center">
+    <div style="display:flex;flex-direction:column;gap:28px">
+      <div style="font-size:14px;color:#00C3BF;font-weight:700">Free exit readiness self-assessment</div>
+      <h1 style="margin:0;font-size:clamp(40px,5.4vw,64px);line-height:1.05;font-weight:700;letter-spacing:-0.02em;text-wrap:balance">See your business through a buyer’s eyes.</h1>
+      <p style="margin:0;font-size:19px;line-height:1.55;color:#D5DEE3;max-width:540px;text-wrap:pretty">Explore what makes your business attractive, what may be difficult to transfer and what needs preparation. Start with a few questions, then choose whether to go into the details.</p>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+        <a href="#" style="background:#00C3BF;color:#002336;padding:16px 26px;border-radius:4px;font-weight:700;font-size:16px">Start my first assessment</a>
+        <a href="#how" style="color:#FFFFFF;padding:16px 4px;font-size:16px;border-bottom:1px solid #00C3BF">How the assessment works</a>
+      </div>
+      <p style="margin:0;font-size:14px;line-height:1.5;color:#98A6AE;max-width:520px">Your progress is saved after every answer. Pause at any point, return later or invite a colleague to answer the parts they know best.</p>
+    </div>
+
+    <sc-if value="{{ showQuestion }}" hint-placeholder-val="{{ true }}">
+      <div style="background:#FFFFFF;color:#003E5F;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:20px;box-shadow:0 24px 60px rgba(0,0,0,0.35)">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px">
+          <span style="font-weight:700;color:#007775">Discovery</span>
+          <span style="color:#5B6E78">People and continuity: 1 of 2 questions</span>
+        </div>
+        <div style="height:4px;background:#E7ECEF;border-radius:2px;overflow:hidden"><div style="width:62%;height:100%;background:#00C3BF"></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:22px;font-weight:700;line-height:1.3;text-wrap:pretty">You are unavailable for four weeks. Which decisions wait?</div>
+          <div style="font-size:14px;color:#5B6E78;line-height:1.5">Buyers look at whether the business keeps running without its current decision makers.</div>
+        </div>
+        <div role="radiogroup" style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ options }}" as="o" hint-placeholder-count="3">
+            <div role="radio" aria-checked="{{ o.checked }}" tabindex="0" onClick="{{ o.pick }}" style="display:flex;gap:12px;align-items:center;padding:13px 14px;border-radius:6px;cursor:pointer;border:1px solid {{ o.border }};background:{{ o.bg }};font-size:15px;line-height:1.35">
+              <div style="width:18px;height:18px;flex:none;border-radius:50%;border:2px solid {{ o.border }};display:flex;align-items:center;justify-content:center"><div style="width:8px;height:8px;border-radius:50%;background:{{ o.dot }}"></div></div>
+              <span>{{ o.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ statuses }}" as="s" hint-placeholder-count="3">
+            <div onClick="{{ s.pick }}" style="padding:7px 12px;border-radius:999px;font-size:13px;cursor:pointer;border:1px solid {{ s.border }};background:{{ s.bg }};color:#003E5F">{{ s.label }}</div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ hasNote }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#F5EFEF;border-radius:6px;padding:14px 16px;font-size:14px;line-height:1.5">{{ note }}</div>
+        </sc-if>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px">
+          <span style="color:#5B6E78">Back</span>
+          <span style="background:#003E5F;color:#FFFFFF;padding:10px 18px;border-radius:4px;font-weight:700">Next</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#FFFFFF;color:#003E5F;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:18px;box-shadow:0 24px 60px rgba(0,0,0,0.35)">
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span style="font-weight:700;color:#007775">Your initial picture</span><span style="color:#5B6E78">Illustrative</span></div>
+        <div style="font-size:20px;font-weight:700;line-height:1.3">Three observations from your first answers</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:15px;line-height:1.5">
+          <div style="padding:14px 16px;border:1px solid #DCE3E7;border-radius:6px">You named personal customer relationships as a strength. Your continuity answers suggest checking how these relationships carry over to a new owner.</div>
+          <div style="padding:14px 16px;border:1px solid #DCE3E7;border-radius:6px">Material decisions continue during a four-week absence. This supports transferability of leadership.</div>
+          <div style="padding:14px 16px;border:1px solid #DCE3E7;border-radius:6px;color:#5B6E78">Tax preparation needs more detail before we can say anything useful.</div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;font-size:14px">
+          <span style="background:#003E5F;color:#FFFFFF;padding:10px 16px;border-radius:4px;font-weight:700">Continue preparation</span>
+          <span style="border:1px solid #003E5F;padding:10px 16px;border-radius:4px">Save and return</span>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</section>
+
+<section id="how" data-screen-label="How it works" style="background:#FFFFFF">
+  <div style="max-width:1200px;margin:0 auto;padding:96px 24px;display:flex;flex-direction:column;gap:48px">
+    <div style="display:flex;flex-direction:column;gap:14px;max-width:720px">
+      <div style="width:48px;height:3px;background:#00C3BF"></div>
+      <h2 style="margin:0;font-size:clamp(30px,3.4vw,42px);line-height:1.15;font-weight:700;letter-spacing:-0.01em;text-wrap:balance">Useful observations first. Detailed preparation when you are ready.</h2>
+      <p style="margin:0;font-size:17px;line-height:1.6;color:#3D5866;text-wrap:pretty">ExitIQ starts with a short discovery and gives you a first picture before asking for detailed preparation data. You decide whether to go further.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:2px;background:#DCE3E7;border:1px solid #DCE3E7">
+      <sc-for list="{{ stages }}" as="st" hint-placeholder-count="5">
+        <div style="background:#FFFFFF;padding:28px 22px;display:flex;flex-direction:column;gap:12px">
+          <div style="width:36px;height:36px;border-radius:50%;background:#003E5F;color:#00C3BF;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px">{{ st.n }}</div>
+          <div style="font-size:18px;font-weight:700">{{ st.title }}</div>
+          <div style="font-size:15px;line-height:1.55;color:#3D5866">{{ st.body }}</div>
+          <div style="margin-top:auto;padding-top:10px;font-size:13px;font-weight:700;color:#007775">{{ st.outcome }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <p style="margin:0;font-size:15px;line-height:1.6;color:#3D5866;max-width:760px">The number of questions depends on your situation. ExitIQ shows how many apply to you, and if an answer adds questions, it tells you which ones and why.</p>
+  </div>
+</section>
+
+<section id="report" data-screen-label="Report" style="background:#F5EFEF">
+  <div style="max-width:1200px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:56px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:24px">
+      <div style="width:48px;height:3px;background:#00C3BF"></div>
+      <h2 style="margin:0;font-size:clamp(30px,3.4vw,42px);line-height:1.15;font-weight:700;letter-spacing:-0.01em;text-wrap:balance">Three dimensions of readiness, shown with how much they rest on.</h2>
+      <p style="margin:0;font-size:17px;line-height:1.6;color:#3D5866;text-wrap:pretty">Each dimension is reported separately, together with answer coverage and evidence support. Open questions stay visible as open. They are never counted as failures, and they never inflate a result.</p>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <sc-for list="{{ dims }}" as="d" hint-placeholder-count="3">
+          <div style="display:flex;gap:16px;align-items:flex-start">
+            <div style="width:10px;height:10px;margin-top:8px;flex:none;background:#003E5F"></div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="font-size:17px;font-weight:700">{{ d.name }}</div>
+              <div style="font-size:15px;line-height:1.55;color:#3D5866">{{ d.body }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border-top:1px solid #D6CCCC;padding-top:20px;display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:15px;font-weight:700">What ExitIQ deliberately does not show</div>
+        <div style="font-size:15px;line-height:1.6;color:#3D5866">No overall exit score, no valuation, no sale probability and no implied multiple. Readiness describes preparation, not what a buyer will pay.</div>
+      </div>
+    </div>
+
+    <div style="background:#FFFFFF;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:22px;box-shadow:0 12px 32px rgba(0,62,95,0.10)">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap">
+        <div style="font-size:18px;font-weight:700">Action plan</div>
+        <div style="font-size:13px;color:#5B6E78">Illustrative example · Owner-led, full sale, 19 to 36 months</div>
+      </div>
+      <sc-for list="{{ dims }}" as="d" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:column;gap:10px;padding-bottom:18px;border-bottom:1px solid #E7ECEF">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap">
+            <span style="font-size:16px;font-weight:700">{{ d.name }}</span>
+            <span style="font-size:13px;color:{{ d.statusColor }};font-weight:700">{{ d.status }}</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:10px">
+            <span style="font-size:32px;font-weight:700;line-height:1">{{ d.index }}</span>
+            <span style="font-size:13px;color:#5B6E78">{{ d.range }}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;font-size:13px;color:#3D5866">
+            <div style="display:flex;flex-direction:column;gap:5px"><span>Answer coverage {{ d.cov }}%</span><div style="height:5px;background:#E7ECEF;border-radius:3px"><div style="height:100%;width:{{ d.covW }};background:#003E5F;border-radius:3px"></div></div></div>
+            <div style="display:flex;flex-direction:column;gap:5px"><span>Evidence support {{ d.ev }}%</span><div style="height:5px;background:#E7ECEF;border-radius:3px"><div style="height:100%;width:{{ d.evW }};background:#00C3BF;border-radius:3px"></div></div></div>
+          </div>
+        </div>
+      </sc-for>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:14px;font-weight:700">Shown separately from the scores</div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid #F34832;border-radius:6px;font-size:14px;line-height:1.5">
+          <span style="flex:none;font-size:12px;font-weight:700;color:#FFFFFF;background:#F34832;padding:3px 8px;border-radius:3px">Critical</span>
+          <span>Required shareholder approval is not mapped, but a launch is planned within six months.</span>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid #DCE3E7;border-radius:6px;font-size:14px;line-height:1.5">
+          <span style="flex:none;font-size:12px;font-weight:700;color:#003E5F;background:#E7ECEF;padding:3px 8px;border-radius:3px">Review</span>
+          <span>Past reorganisations not yet reviewed by a tax adviser.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="context" data-screen-label="Ownership contexts" style="background:#FFFFFF">
+  <div style="max-width:1200px;margin:0 auto;padding:96px 24px;display:flex;flex-direction:column;gap:40px">
+    <div style="display:flex;flex-direction:column;gap:14px;max-width:760px">
+      <div style="width:48px;height:3px;background:#00C3BF"></div>
+      <h2 style="margin:0;font-size:clamp(30px,3.4vw,42px);line-height:1.15;font-weight:700;letter-spacing:-0.01em;text-wrap:balance">The questions follow your ownership and your transaction.</h2>
+      <p style="margin:0;font-size:17px;line-height:1.6;color:#3D5866;text-wrap:pretty">A family business preparing a succession faces different questions than a PE-backed platform or a corporate carve-out. You confirm the perspective that fits. Mixed ownership is supported, and specialist modules such as debt, employee equity or separation only appear when they apply.</p>
+    </div>
+    <div role="tablist" style="display:flex;gap:8px;flex-wrap:wrap">
+      <sc-for list="{{ profiles }}" as="p" hint-placeholder-count="4">
+        <div role="tab" aria-selected="{{ p.active }}" tabindex="0" onClick="{{ p.pick }}" style="padding:11px 18px;border-radius:4px;cursor:pointer;font-size:15px;font-weight:700;background:{{ p.bg }};color:{{ p.fg }};border:1px solid #003E5F">{{ p.label }}</div>
+      </sc-for>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px">
+      <div style="background:#F5EFEF;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:14px;font-weight:700;color:#007775">What we look at</div>
+        <div style="font-size:18px;line-height:1.55">{{ prof.focus }}</div>
+      </div>
+      <div style="border:1px solid #DCE3E7;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:14px;font-weight:700;color:#007775">What we will not do</div>
+        <div style="font-size:18px;line-height:1.55">{{ prof.avoid }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Working style" style="background:#003E5F;color:#FFFFFF">
+  <div style="max-width:1200px;margin:0 auto;padding:88px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:40px">
+    <sc-for list="{{ principles }}" as="pr" hint-placeholder-count="4">
+      <div style="display:flex;flex-direction:column;gap:10px;border-top:2px solid #00C3BF;padding-top:20px">
+        <div style="font-size:18px;font-weight:700">{{ pr.title }}</div>
+        <div style="font-size:15px;line-height:1.6;color:#D5DEE3">{{ pr.body }}</div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Closing CTA" style="background:#FFFFFF">
+  <div style="max-width:1200px;margin:0 auto;padding:96px 24px;display:flex;flex-direction:column;align-items:flex-start;gap:24px">
+    <h2 style="margin:0;font-size:clamp(30px,3.4vw,42px);line-height:1.15;font-weight:700;letter-spacing:-0.01em;max-width:760px;text-wrap:balance">Start with eight questions. Decide afterwards how far to go.</h2>
+    <p style="margin:0;font-size:17px;line-height:1.6;color:#3D5866;max-width:640px">The assessment is free. Contact details, report delivery and newsletters are separate and optional.</p>
+    <a href="#" style="background:#003E5F;color:#FFFFFF;padding:16px 26px;border-radius:4px;font-weight:700;font-size:16px">Start my first assessment</a>
+  </div>
+</section>
+
+<footer data-screen-label="Footer" style="background:#002336;color:#98A6AE">
+  <div style="max-width:1200px;margin:0 auto;padding:40px 24px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:13px;line-height:1.6">
+    <div style="display:flex;flex-direction:column;gap:6px;max-width:560px">
+      <span style="color:#FFFFFF;font-weight:700">ExitIQ by atares M&amp;A</span>
+      <span>ExitIQ is a structured self-assessment. It does not replace legal, tax or financial advice, and its results are not a valuation.</span>
+    </div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap">
+      <a href="#" style="color:#98A6AE">Privacy</a>
+      <a href="#" style="color:#98A6AE">Imprint</a>
+      <a href="#" style="color:#98A6AE">atares.team</a>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;heroPreview&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;question&quot;,&quot;initial picture&quot;],&quot;default&quot;:&quot;question&quot;,&quot;tsType&quot;:&quot;'question'|'initial picture'&quot;}}">
+class Component extends DCLogic {
+  state = { pick: null, profile: 0 };
+  renderVals() {
+    const heroPreview = this.props.heroPreview ?? 'question';
+    const opts = [
+      'Many routine decisions would wait',
+      'Some material decisions would wait',
+      'Material decisions continue within documented delegated authority'
+    ];
+    const stat = ['Unknown', 'Needs internal confirmation', 'Prefer not to answer'];
+    const p = this.state.pick;
+    const options = opts.map((label, i) => {
+      const on = p === 'o' + i;
+      return { label, checked: on ? 'true' : 'false', border: on ? '#003E5F' : '#C9D3D9', bg: on ? '#EEF4F7' : '#FFFFFF', dot: on ? '#003E5F' : 'transparent', pick: () => this.setState({ pick: 'o' + i }) };
+    });
+    const statuses = stat.map((label, i) => {
+      const on = p === 's' + i;
+      return { label, border: on ? '#003E5F' : '#C9D3D9', bg: on ? '#EEF4F7' : '#FFFFFF', pick: () => this.setState({ pick: 's' + i }) };
+    });
+    const note = p == null ? '' : p[0] === 's'
+      ? 'Saved as open. It stays visible in your action plan and does not count against you.'
+      : 'Saved. You can change this answer at any time.';
+    const profilesData = [
+      { label: 'Owner or family', focus: 'Delegated authority, continuity of relationships, succession aims, preparation of seller proceeds and your intended role after the transaction.', avoid: 'Treat your personal involvement as an automatic obstacle to a sale.' },
+      { label: 'Corporate subsidiary', focus: 'Sale perimeter, standalone financials, group services and systems, allocation of people and IP, tax separation and transitional arrangements.', avoid: 'Assume that a separate legal entity is already operationally independent.' },
+      { label: 'PE-backed', focus: 'Demonstrated value creation, release of debt and guarantees, integration of acquisitions, investor approvals and management incentives.', avoid: 'Count investor ownership or a short fund timeline as evidence of readiness.' },
+      { label: 'VC-backed', focus: 'Fully diluted ownership, investor rights, liquidation economics, convertibles, funding runway and credible growth economics.', avoid: 'Penalise deliberate growth investment simply because EBITDA is negative.' }
+    ];
+    const profiles = profilesData.map((x, i) => ({ label: x.label, active: i === this.state.profile ? 'true' : 'false', bg: i === this.state.profile ? '#003E5F' : '#FFFFFF', fg: i === this.state.profile ? '#FFFFFF' : '#003E5F', pick: () => this.setState({ profile: i }) }));
+    return {
+      showQuestion: heroPreview === 'question',
+      showResult: heroPreview === 'initial picture',
+      options, statuses, note, hasNote: p != null,
+      profiles, prof: profilesData[this.state.profile],
+      stages: [
+        { n: '1', title: 'Context', body: 'Your role, ownership, objective and what is being sold. We explain why each field matters.', outcome: 'Only relevant questions' },
+        { n: '2', title: 'Discovery', body: 'Eight short questions on strengths, dependencies and early preparation.', outcome: 'A new perspective' },
+        { n: '3', title: 'Initial picture', body: 'Up to three observations based on your answers, plus the areas that need more detail.', outcome: 'A reason to continue, or not' },
+        { n: '4', title: 'Deep assessment', body: 'Finance, tax, legal, governance and process, by theme. Earlier answers are reused. Delegate parts to colleagues.', outcome: 'Technical preparation' },
+        { n: '5', title: 'Action plan', body: 'Three readiness dimensions, open risks, evidence gaps and prioritised tasks with suggested owners.', outcome: 'Practical next steps' }
+      ],
+      dims: [
+        { name: 'Strategic clarity', body: 'Objectives, alignment among decision makers, approvals and the plan for the next stage.', index: '72', range: 'Range 64 to 78', status: 'Indicative, incomplete', statusColor: '#007775', cov: 86, covW: '86%', ev: 40, evW: '40%' },
+        { name: 'Operational transferability', body: 'Whether economics, customers, people and systems carry over to a new owner.', index: '81', range: 'Complete', status: 'Complete', statusColor: '#00B167', cov: 100, covW: '100%', ev: 55, evW: '55%' },
+        { name: 'Transaction preparation', body: 'Financial information, tax, legal title and rights, and the ability to run a process.', index: 'Not shown', range: 'Answer 6 more questions to see an index', status: 'Insufficient coverage', statusColor: '#5B6E78', cov: 61, covW: '61%', ev: 18, evW: '18%' }
+      ],
+      principles: [
+        { title: 'One fact per question', body: 'Each question asks about one thing. Explanations sit below the question, not inside it.' },
+        { title: 'Open is not wrong', body: 'Unknown, needs confirmation and needs adviser review are recorded as open items, never as zero points.' },
+        { title: 'Work across sessions', body: 'Every answer is saved. Go back, change answers and see what that changes before anything is hidden.' },
+        { title: 'Your data, your call', body: 'Results stay with you. Sharing with atares or receiving the report by email is a separate choice.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

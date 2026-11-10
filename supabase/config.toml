@@ -1,0 +1,11 @@
+# Supabase CLI configuration for local development (`npx supabase start`).
+# The hosted project is elpjwoujqzskgydytvob; link it with
+#   npx supabase link --project-ref elpjwoujqzskgydytvob
+# Hosted auth settings are changed in the dashboard, not here (see README).
+project_id = "exitiq"
+
+[auth]
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["http://localhost:5173/assessment"]
+# Every visitor gets a real auth.uid() so RLS can enforce owner-only access.
+enable_anonymous_sign_ins = true
