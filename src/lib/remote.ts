@@ -6,6 +6,7 @@
 import { CATALOGUE_VERSION, REPORT_VERSION, SCORING_VERSION } from '../model/catalogue';
 import type { ResultSnapshot, Task } from '../model/plan';
 import type { Answer, AnswerMap, AssessmentContext, Diagnostics, EvidenceRef } from '../model/types';
+import { getCaptchaToken } from './captcha';
 import { supabase } from './supabase';
 
 export type SyncStatus = 'idle' | 'saving' | 'saved' | 'local-only' | 'error';
@@ -41,7 +42,9 @@ export function ensureUser(): Promise<string | null> {
       try {
         const { data } = await supabase.auth.getSession();
         if (data.session?.user) return data.session.user.id;
-        const { data: anon, error } = await supabase.auth.signInAnonymously();
+        // CAPTCHA protection is on for the project, so sign-in needs a Turnstile token.
+        const captchaToken = await getCaptchaToken();
+        const { data: anon, error } = await supabase.auth.signInAnonymously(captchaToken ? { options: { captchaToken } } : undefined);
         if (error || !anon.user) throw error ?? new Error('No user returned');
         return anon.user.id;
       } catch (e) {

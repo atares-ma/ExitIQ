@@ -32,7 +32,7 @@ The Supabase connector used to build this had no access to the project, so **the
 
    Alternatively, paste the files in `supabase/migrations/` into the SQL editor, in filename order.
 2. **Enable anonymous sign-ins**: Dashboard → Authentication → Sign In / Providers → *Allow anonymous sign-ins*. Each visitor then gets a real `auth.uid()`, and RLS enforces owner-only access. Without it, the app still works, but only in the browser ("Saved in this browser").
-3. **Turn on abuse protection** for anonymous sign-ins: Authentication → Attack Protection → CAPTCHA (Turnstile or hCaptcha). Also review the rate limits.
+3. **Turn on abuse protection** for anonymous sign-ins: Authentication → Attack Protection → CAPTCHA with **Cloudflare Turnstile**, using the Turnstile *secret* key. Then set the Turnstile *site* key as `VITE_TURNSTILE_SITE_KEY` on Vercel (and in `.env.local`), and redeploy. Without the site key, Supabase rejects every anonymous sign-in, and the app quietly falls back to saving in the browser only. In Cloudflare, the widget's allowed hostnames must include the production domain (and `localhost` for development).
 4. **URL configuration**: Authentication → URL Configuration. Set the Site URL to the production domain and add `https://<domain>/assessment` as a redirect URL. "Save and return" uses these when it links an email to the anonymous user.
 5. **Check the advisors**: Dashboard → Advisors (security and performance) after the migration.
 
@@ -68,7 +68,7 @@ npm run dev
 | `npm run db:test` | Applies all migrations to a throwaway local Postgres (with a minimal Supabase stub) and runs the RLS checks in `supabase/tests/rls.test.sql` |
 | `npm run gen:catalogue-sql` | Regenerates the catalogue seed migration after editing `src/model/catalogue.ts` |
 
-Environment variables (`.env.local`, optional): `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`. The publishable key is public by design, and the defaults point at the ExitIQ project. Never put a secret or service-role key in a `VITE_` variable.
+Environment variables (`.env.local`): `VITE_TURNSTILE_SITE_KEY` (required while CAPTCHA protection is on), plus the optional `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`. The publishable key is public by design, and the defaults point at the ExitIQ project. Never put a secret or service-role key in a `VITE_` variable.
 
 ## Code map
 
